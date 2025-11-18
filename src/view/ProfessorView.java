@@ -80,7 +80,7 @@ public class ProfessorView {
             System.out.print("Horas Aula: ");
             int horas = Integer.parseInt(scanner.nextLine());
 
-            ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas);
+            ProfessorSubstituto p = new ProfessorSubstituto( nome,  matricula,  titulacao, horas);
             controller.cadastrarProfessor(p);
         }
 

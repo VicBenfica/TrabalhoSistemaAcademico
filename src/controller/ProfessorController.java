@@ -75,7 +75,7 @@ public class ProfessorController {
             return null;
         }
 
-        return p.calcularSalarioAtual();
+        return p.calcularSalario();
     }
 
     // 6) REMOVER PROFESSOR

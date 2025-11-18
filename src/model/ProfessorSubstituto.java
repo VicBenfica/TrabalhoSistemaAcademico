@@ -2,26 +2,18 @@ package src.model;
 
 public class ProfessorSubstituto extends Professor {
 
-    public ProfessorSubstituto(String nome, String matricula, String titulacao, double salarioBase, String contrato,
-            String disciplina, int horasAula) {
-        super(nome, matricula, titulacao, salarioBase, contrato, disciplina, horasAula);
+    private int horasAula;
+
+    public ProfessorSubstituto(String nome, String matricula, String titulacao, int horasAula) {
+        super(nome, matricula, titulacao);
+        this.horasAula = horasAula;
     }
 
-    @Override
-    public double calcularSalarioAtual() {
-        // TODO Auto-generated method stub
-        return super.calcularSalarioAtual();
-    }
+    public int getHorasAula() { return horasAula; }
+    public void setHorasAula(int horasAula) { this.horasAula = horasAula; }
 
     @Override
-    public void cadastrarProfessor() {
-        // TODO Auto-generated method stub
-        super.cadastrarProfessor();
-    }
-
-    @Override
-    public void gerarRelatorio() {
-        // TODO Auto-generated method stub
-        super.gerarRelatorio();
+    public double calcularSalario() {
+        return horasAula * 80.0; // regra do PDF
     }
 }

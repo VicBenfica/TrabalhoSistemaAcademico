@@ -1,39 +1,19 @@
 package src.model;
 
 public class ProfessorVitalicio extends Professor {
-    private int bonus;
 
-    public ProfessorVitalicio(int bonus, String nome, String matricula, String titulacao, double salarioBase, String contrato, String disciplina,int horasAula){
-        super(nome,matricula,titulacao,salarioBase,contrato,disciplina, horasAula);
-        this.bonus=bonus;
+    private double salarioBase;
+
+    public ProfessorVitalicio(String nome, String matricula, String titulacao, double salarioBase) {
+        super(nome, matricula, titulacao);
+        this.salarioBase = salarioBase;
     }
 
-    public int getBonus() {
-        return bonus;
-    }
-    public void setBonus(int bonus) {
-        this.bonus = bonus;
-    }
+    public double getSalarioBase() { return salarioBase; }
+    public void setSalarioBase(double salarioBase) { this.salarioBase = salarioBase; }
+
     @Override
-    public double calcularSalarioAtual() {
-        // TODO Auto-generated method stub
-        return super.calcularSalarioAtual();
+    public double calcularSalario() {
+        return salarioBase;
     }
-    public void cadastrarProjeto(){
-
-    }
-    @Override
-    public void gerarRelatorio() {
-        // TODO Auto-generated method stub
-        super.gerarRelatorio();
-    }
-    public void listarProjeto(){
-
-    }
-    @Override
-    public void cadastrarProfessor() {
-        // TODO Auto-generated method stub
-        super.cadastrarProfessor();
-    }
-
 }
