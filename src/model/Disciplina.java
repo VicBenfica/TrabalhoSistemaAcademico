@@ -35,4 +35,28 @@ public abstract class Disciplina {
     public Professor getProfessorResponsavel() {
         return professorResponsavel;
     }
+    public void cadastrarDisciplina(){
+
+    }
+    public void editarDisciplina(){
+
+    }
+    public void listarDisciplina(){
+
+    }
+    public void exibirAlunos(){
+
+    }
+    public void removerDisciplina(){
+
+    }
+    public void removerProfessor(){
+
+    }
+    public void adicionarProfessor(){
+
+    }
+    public void gerarRelatorio(){
+
+    }
 }
