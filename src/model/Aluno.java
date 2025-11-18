@@ -34,4 +34,17 @@ public class Aluno {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public void cadastrarAluno(){
+
+    }
+    public void listarProjeto(){
+
+    }
+    public void matricularAluno(){
+
+    }
+    public void desmatricularAluno(){
+        
+    }
 }
