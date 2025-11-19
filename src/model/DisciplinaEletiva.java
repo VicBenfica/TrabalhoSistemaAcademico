@@ -1,13 +1,20 @@
 package src.model;
 
 public class DisciplinaEletiva extends Disciplina {
+
     private String registroInteresse;
 
-    public DisciplinaEletiva(String nome, String codigo, int cargaHoraria, Professor professorResponsavel,String alunosMatriculados, String registroInteresse) {
-        super(nome, codigo, cargaHoraria, professorResponsavel, alunosMatriculados);
+    public DisciplinaEletiva(String nome, String codigo, int cargaHoraria,
+            Professor professorResponsavel,
+            String registroInteresse) {
+
+        // Chamada correta ao construtor da classe mãe
+        super(nome, codigo, cargaHoraria, professorResponsavel);
+
         this.registroInteresse = registroInteresse;
     }
 
+    // GETTERS e SETTERS
     public String getRegistroInteresse() {
         return registroInteresse;
     }
@@ -15,25 +22,10 @@ public class DisciplinaEletiva extends Disciplina {
     public void setRegistroInteresse(String registroInteresse) {
         this.registroInteresse = registroInteresse;
     }
-    @Override
-    public void gerarRelatorio() {
-        // TODO Auto-generated method stub
-        super.gerarRelatorio();
+
+    // Método para registrar interesse 
+    public void registrarInteresse(String interesse) {
+        this.registroInteresse = interesse;
     }
-    @Override
-    public void cadastrarDisciplina() {
-        // TODO Auto-generated method stub
-        super.cadastrarDisciplina();
-    }
-    public double calcularPopularidade(){
-        return 3.3;//arrumar
-    }
-    @Override
-    public void exibirAlunos() {
-        // TODO Auto-generated method stub
-        super.exibirAlunos();
-    }
-    public void registroInteresse(){
-        
-    }
+
 }

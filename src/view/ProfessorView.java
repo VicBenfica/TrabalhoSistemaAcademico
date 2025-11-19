@@ -20,9 +20,7 @@ public class ProfessorView {
         this.controller = controller;
     }
 
-    // --------------------------------------
     // MENU PRINCIPAL
-    // --------------------------------------
     public void menu() {
         int opcao = -1;
 
@@ -50,9 +48,8 @@ public class ProfessorView {
         }
     }
 
-    // --------------------------------------
+    
     // CADASTRAR PROFESSOR
-    // --------------------------------------
     private void cadastrarProfessor() {
         System.out.println("\n=== Cadastro de Professor ===");
         System.out.println("1 - Professor Vitalício");
@@ -87,9 +84,9 @@ public class ProfessorView {
         System.out.println("Professor cadastrado com sucesso!");
     }
 
-    // --------------------------------------
+ 
     // EDITAR PROFESSOR
-    // --------------------------------------
+    
     private void editarProfessor() {
         System.out.print("\nDigite a matrícula do professor a editar: ");
         String matricula = scanner.nextLine();
@@ -124,9 +121,7 @@ public class ProfessorView {
         else System.out.println("Erro ao atualizar.");
     }
 
-    // --------------------------------------
     // CALCULAR SALÁRIO
-    // --------------------------------------
     private void calcularSalario() {
         System.out.print("\nDigite a matrícula: ");
         String matricula = scanner.nextLine();
@@ -140,9 +135,7 @@ public class ProfessorView {
         }
     }
 
-    // --------------------------------------
     // LISTAR PROFESSORES
-    // --------------------------------------
     private void listarProfessores() {
         List<Professor> lista = controller.listarProfessores();
 
@@ -157,9 +150,7 @@ public class ProfessorView {
         }
     }
 
-    // --------------------------------------
     // REMOVER PROFESSOR
-    // --------------------------------------
     private void removerProfessor() {
         System.out.print("\nDigite a matrícula para remover: ");
         String matricula = scanner.nextLine();

@@ -1,62 +1,68 @@
 package src.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Disciplina {
+
     private String nome;
     private String codigo;
     private int cargaHoraria;
     private Professor professorResponsavel;
-    private String alunosMatriculados;
+    private List<Aluno> alunosMatriculados;
 
-    public Disciplina(String nome, String codigo, int cargaHoraria, Professor professorResponsavel,
-            String alunosMatriculados) {
+    public Disciplina(String nome, String codigo, int cargaHoraria, Professor professorResponsavel) {
         this.nome = nome;
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
         this.professorResponsavel = professorResponsavel;
-        this.alunosMatriculados = alunosMatriculados;
+        this.alunosMatriculados = new ArrayList<>(); 
     }
 
-    public String getAlunosMatriculados() {
-        return alunosMatriculados;
-    }
-
-    public int getCargaHoraria() {
-        return cargaHoraria;
+    // GETTERS
+    public String getNome() {
+        return nome;
     }
 
     public String getCodigo() {
         return codigo;
     }
 
-    public String getNome() {
-        return nome;
+    public int getCargaHoraria() {
+        return cargaHoraria;
     }
 
     public Professor getProfessorResponsavel() {
         return professorResponsavel;
     }
-    public void cadastrarDisciplina(){
 
+    public List<Aluno> getAlunosMatriculados() {
+        return alunosMatriculados;
     }
-    public void editarDisciplina(){
 
+    // SETTERS
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    public void listarDisciplina(){
 
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
-    public void exibirAlunos(){
 
+    public void setCargaHoraria(int cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
     }
-    public void removerDisciplina(){
 
+    public void setProfessorResponsavel(Professor professorResponsavel) {
+        this.professorResponsavel = professorResponsavel;
     }
-    public void removerProfessor(){
 
+    // MÉTODOS PARA GERENCIAR ALUNOS
+    public void adicionarAluno(Aluno aluno) {
+        alunosMatriculados.add(aluno);
     }
-    public void adicionarProfessor(){
 
-    }
-    public void gerarRelatorio(){
-
+    public void removerAluno(Aluno aluno) {
+        alunosMatriculados.remove(aluno);
     }
 }
