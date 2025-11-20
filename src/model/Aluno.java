@@ -1,18 +1,21 @@
 package src.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Aluno {
     private String nome;
     private String matricula;
-    private String disciplina;
+    private List<Disciplina> disciplinasMatriculadas;
 
-    public Aluno(String nome, String matricula, String disciplina) {
-        this.disciplina = disciplina;
+    public Aluno(String nome, String matricula) {
+        this.disciplinasMatriculadas = new ArrayList<>();
         this.matricula = matricula;
         this.nome = nome;
     }
 
-    public String getDisciplina() {
-        return disciplina;
+    public List<Disciplina> getDisciplina() {
+        return disciplinasMatriculadas;
     }
 
     public String getMatricula() {
@@ -23,8 +26,8 @@ public class Aluno {
         return nome;
     }
 
-    public void setDisciplina(String disciplina) {
-        this.disciplina = disciplina;
+    public void setDisciplinaMatriculadas(List<Disciplina> disciplinas) {
+        this.disciplinasMatriculadas = disciplinas;
     }
 
     public void setMatricula(String matricula) {
@@ -35,16 +38,5 @@ public class Aluno {
         this.nome = nome;
     }
 
-    public void cadastrarAluno(){
-
-    }
-    public void listarProjeto(){
-
-    }
-    public void matricularAluno(){
-
-    }
-    public void desmatricularAluno(){
-        
-    }
+    
 }
