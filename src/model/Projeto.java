@@ -25,10 +25,5 @@ public class Projeto {
         this.professor = professor;
     }
 
-    public void cadastrarProjeto(){
-
-    }
-    public void listarProjeto(){
-        
-    }
+    
 }
