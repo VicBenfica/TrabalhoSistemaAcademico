@@ -8,9 +8,9 @@ import src.model.ProfessorVitalicio;
 import src.repository.ProfessorRepository;
 
 
-// aplicar regras de negócio
-// validar ações
-// chamar cálculos do Model
+// aplicar regras de negocio
+// validar acoes
+// chamar calculos do Model
 // acessar o Repository para salvar/remover/buscar
 // devolver respostas para a View
 
@@ -32,7 +32,7 @@ public class ProfessorController {
         return professorRepository.findAll();
     }
 
-    // 3) BUSCAR POR MATRÍCULA
+    // 3) BUSCAR POR MATRiCULA
     public Professor buscarPorMatricula(String matricula) {
         return professorRepository.findByMatricula(matricula);
     }
@@ -48,7 +48,7 @@ public class ProfessorController {
         Professor p = professorRepository.findByMatricula(matricula);
 
         if (p == null) {
-            return false; // não encontrado
+            return false; // NAO encontrado
         }
 
         p.setNome(novoNome);
@@ -66,7 +66,7 @@ public class ProfessorController {
     }
 
     // --------------------------------------
-    // 5) CALCULAR SALÁRIO
+    // 5) CALCULAR SALaRIO
     // --------------------------------------
     public Double calcularSalario(String matricula) {
         Professor p = professorRepository.findByMatricula(matricula);

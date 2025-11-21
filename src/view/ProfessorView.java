@@ -3,22 +3,27 @@ package src.view;
 import java.util.List;
 import java.util.Scanner;
 
+import src.controller.DisciplinaController;
 import src.controller.ProfessorController;
+import src.model.Disciplina;
 import src.model.Professor;
 import src.model.ProfessorSubstituto;
 import src.model.ProfessorVitalicio;
 
 // ler dados (Scanner)
-// mostrar informações na tela (System.out.println)
+// mostrar informacoes na tela (System.out.println)
 
 public class ProfessorView {
 
     private Scanner scanner = new Scanner(System.in);
     private ProfessorController controller;
+    private DisciplinaController disciplinaController;
 
-    public ProfessorView(ProfessorController controller) {
+    public ProfessorView(ProfessorController controller, DisciplinaController disciplinaController) {
         this.controller = controller;
+        this.disciplinaController = disciplinaController;
     }
+    
 
     // MENU PRINCIPAL
     public void menu() {
@@ -37,18 +42,30 @@ public class ProfessorView {
             opcao = Integer.parseInt(scanner.nextLine());
 
             switch (opcao) {
-                case 1: cadastrarProfessor(); break;
-                case 2: editarProfessor(); break;
-                case 3: calcularSalario(); break;
-                case 4: listarProfessores(); break;
-                case 5: removerProfessor(); break;
-                case 0: System.out.println("Encerrando..."); break;
-                default: System.out.println("Opção inválida.");
+                case 1:
+                    cadastrarProfessor();
+                    break;
+                case 2:
+                    editarProfessor();
+                    break;
+                case 3:
+                    calcularSalario();
+                    break;
+                case 4:
+                    listarProfessores();
+                    break;
+                case 5:
+                    removerProfessor();
+                    break;
+                case 0:
+                    System.out.println("Encerrando...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
             }
         }
     }
 
-    
     // CADASTRAR PROFESSOR
     private void cadastrarProfessor() {
         System.out.println("\n=== Cadastro de Professor ===");
@@ -77,16 +94,15 @@ public class ProfessorView {
             System.out.print("Horas Aula: ");
             int horas = Integer.parseInt(scanner.nextLine());
 
-            ProfessorSubstituto p = new ProfessorSubstituto( nome,  matricula,  titulacao, horas);
+            ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas);
             controller.cadastrarProfessor(p);
         }
 
         System.out.println("Professor cadastrado com sucesso!");
     }
 
- 
     // EDITAR PROFESSOR
-    
+
     private void editarProfessor() {
         System.out.print("\nDigite a matrícula do professor a editar: ");
         String matricula = scanner.nextLine();
@@ -117,11 +133,13 @@ public class ProfessorView {
 
         boolean ok = controller.editarProfessor(matricula, nome, titulacao, salario, horas);
 
-        if (ok) System.out.println("Professor atualizado!");
-        else System.out.println("Erro ao atualizar.");
+        if (ok)
+            System.out.println("Professor atualizado!");
+        else
+            System.out.println("Erro ao atualizar.");
     }
 
-    // CALCULAR SALÁRIO
+    // CALCULAR SALaRIO
     private void calcularSalario() {
         System.out.print("\nDigite a matrícula: ");
         String matricula = scanner.nextLine();
@@ -143,10 +161,9 @@ public class ProfessorView {
 
         for (Professor p : lista) {
             System.out.println(
-                p.getNome() + " | " +
-                p.getMatricula() + " | " +
-                p.getTitulacao()
-            );
+                    p.getNome() + " | " +
+                            p.getMatricula() + " | " +
+                            p.getTitulacao());
         }
     }
 
@@ -157,7 +174,29 @@ public class ProfessorView {
 
         boolean ok = controller.removerProfessor(matricula);
 
-        if (ok) System.out.println("Removido com sucesso!");
-        else System.out.println("Professor não encontrado.");
+        if (ok)
+            System.out.println("Removido com sucesso!");
+        else
+            System.out.println("Professor não encontrado.");
     }
+
+    // GERAR RELAToRIO PROFESSOR
+    public void relatorioProfessor() {
+        for (Professor professor : controller.listarProfessores()) {
+            int qtdDisciplina = 0;
+            System.out.println("Professor: " + professor.getNome());
+            System.out.println("Disciplinas ministradas pelo Professor: ");
+
+            for (Disciplina disciplina : disciplinaController.listarDisciplinas()) {
+                if (disciplina.getProfessorResponsavel().getMatricula().equals(professor.getMatricula())) {
+                    qtdDisciplina++;
+                    System.out.println("- " + disciplina.getNome());
+                }
+            }
+
+            System.out.println("Quantidade de Disciplinas ministradas: " + qtdDisciplina);
+            System.out.println("Salário do professor: " + professor.calcularSalario());
+        }
+    }
+
 }

@@ -27,7 +27,7 @@ public class AlunoController {
         return alunoRepository.findAll();
     }
 
-    // BUSCAR ALUNO POR MATRÍCULA
+    // BUSCAR ALUNO POR MATRICULA
     public Aluno buscarPorMatricula(String matricula) {
         return alunoRepository.findByMatricula(matricula);
     }
