@@ -5,11 +5,13 @@ public abstract class Professor {
     protected String nome;
     protected String matricula;
     protected String titulacao;
+    protected double salarioBase;
 
-    public Professor(String nome, String matricula, String titulacao) {
+    public Professor(String nome, String matricula, String titulacao, double salarioBase) {
         this.nome = nome;
         this.matricula = matricula;
         this.titulacao = titulacao;
+        this.salarioBase = salarioBase;
     }
 
     // Método abstrato — cada tipo calcula diferente
@@ -38,5 +40,11 @@ public abstract class Professor {
 
     public void setTitulacao(String titulacao) {
         this.titulacao = titulacao;
+    }
+    public double getSalarioBase() {
+        return salarioBase;
+    }
+    public void setSalarioBase(double salarioBase) {
+        this.salarioBase = salarioBase;
     }
 }

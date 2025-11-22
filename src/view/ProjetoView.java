@@ -13,9 +13,11 @@ import src.controller.*;
 public class ProjetoView {
     private Scanner scanner = new Scanner(System.in);
     private ProjetoController controller;
+    private ProfessorController professorController;
 
-    public ProjetoView(ProjetoController controller) {
+    public ProjetoView(ProjetoController controller, ProfessorController professorController) {
         this.controller = controller;
+        this.professorController = professorController;
     }
 
     // MENU PRINCIPAL
@@ -43,34 +45,52 @@ public class ProjetoView {
             }
         }
     }
-
-    // CADASTRAR PROJETO
+    //CADASTRAR
     private void cadastrarProjeto() {
-        System.out.println("\n=== Cadastro de Projeto ===");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+    System.out.println("\n=== Cadastro de Projeto ===");
 
-        System.out.print("Professor: ");
-        String professor = scanner.nextLine();
+    System.out.print("Nome do projeto: ");
+    String nome = scanner.nextLine();
 
-        Projeto p = new Projeto(nome, professor);
-        controller.cadastrarProjeto(p);
+    System.out.print("Matrícula do Professor Vitalício: ");
+    String matricula = scanner.nextLine();
 
-        System.out.println("Projeto cadastrado com sucesso!");
+    // Buscar professor
+    Professor p = professorController.buscarPorMatricula(matricula);
+
+    if (p == null || !(p instanceof ProfessorVitalicio)) {
+        System.out.println("Professor não encontrado ou não é vitalício!");
+        return;
     }
+
+    ProfessorVitalicio profV = (ProfessorVitalicio) p;
+
+    // Criar projeto vinculado ao professor
+    Projeto projeto = new Projeto(nome, profV);
+
+    // Adicionar ao professor também (bidirecional)
+    profV.adicionarProjeto(projeto);
+
+    controller.cadastrarProjeto(projeto);
+
+    System.out.println("Projeto cadastrado com sucesso!");
+}
+
 
     // LISTAR PROEJETOS
     private void listarProjeto() {
-        List<Projeto> lista = controller.listarProjeto();
+    List<Projeto> lista = controller.listarProjeto();
 
-        System.out.println("\n=== LISTA DE PROJETOS ===");
+    System.out.println("\n=== LISTA DE PROJETOS ===");
 
-        for (Projeto p : lista) {
-            System.out.println(
-                    p.getNome() + " | " +
-                            p.getNome() + " | " +
-                            p.getProfessor());
-        }
+    for (Projeto p : lista) {
+        System.out.println(
+            p.getNome() + " | " +
+            p.getProfessor().getNome() + " | Matricula: " +
+            p.getProfessor().getMatricula()
+        );
     }
+}
+
 
 }

@@ -2,9 +2,9 @@ package src.model;
 
 public class Projeto {
     private String nome;
-    private String professor;
+    private ProfessorVitalicio professor;
 
-    public Projeto(String nome, String professor) {
+    public Projeto(String nome, ProfessorVitalicio professor) {
         this.nome = nome;
         this.professor = professor;
     }
@@ -13,7 +13,7 @@ public class Projeto {
         return nome;
     }
 
-    public String getProfessor() {
+    public ProfessorVitalicio getProfessor() {
         return professor;
     }
 
@@ -21,7 +21,7 @@ public class Projeto {
         this.nome = nome;
     }
 
-    public void setProfessor(String professor) {
+    public void setProfessor(ProfessorVitalicio professor) {
         this.professor = professor;
     }
 

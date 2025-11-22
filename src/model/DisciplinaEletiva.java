@@ -23,9 +23,15 @@ public class DisciplinaEletiva extends Disciplina {
         this.registroInteresse = registroInteresse;
     }
 
-    // Método para registrar interesse 
+    // Método para registrar interesse
     public void registrarInteresse(String interesse) {
         this.registroInteresse = interesse;
+    }
+
+    public double calcularPopularidade(int totalAlunos) {
+        if (totalAlunos == 0)
+            return 0;
+        return ((double) getAlunosMatriculados().size() / totalAlunos) * 100;
     }
 
 }

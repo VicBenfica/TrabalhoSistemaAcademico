@@ -4,8 +4,8 @@ public class ProfessorSubstituto extends Professor {
 
     private int horasAula;
 
-    public ProfessorSubstituto(String nome, String matricula, String titulacao, int horasAula) {
-        super(nome, matricula, titulacao);
+    public ProfessorSubstituto(String nome, String matricula, String titulacao, int horasAula, double salarioBase) {
+        super(nome, matricula, titulacao, salarioBase);
         this.horasAula = horasAula;
     }
 

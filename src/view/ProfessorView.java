@@ -23,7 +23,6 @@ public class ProfessorView {
         this.controller = controller;
         this.disciplinaController = disciplinaController;
     }
-    
 
     // MENU PRINCIPAL
     public void menu() {
@@ -36,6 +35,7 @@ public class ProfessorView {
             System.out.println("3 - Calcular Salário");
             System.out.println("4 - Listar Professores");
             System.out.println("5 - Remover Professor");
+            System.out.println("6 - Gerar Relatorio");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -56,6 +56,9 @@ public class ProfessorView {
                     break;
                 case 5:
                     removerProfessor();
+                    break;
+                case 6:
+                    relatorioProfessor();
                     break;
                 case 0:
                     System.out.println("Encerrando...");
@@ -87,14 +90,20 @@ public class ProfessorView {
             System.out.print("Salário base: ");
             double salarioBase = Double.parseDouble(scanner.nextLine());
 
-            ProfessorVitalicio p = new ProfessorVitalicio(nome, matricula, titulacao, salarioBase);
+            System.out.print("Possui doutorado? (1-Sim / 2-Não): ");
+            int doutorado = Integer.parseInt(scanner.nextLine());
+
+            ProfessorVitalicio p = new ProfessorVitalicio(nome, matricula, titulacao, salarioBase, doutorado);
             controller.cadastrarProfessor(p);
 
-        } else if (tipo == 2) {
-            System.out.print("Horas Aula: ");
+        } else {
+            System.out.print("Horas aula: ");
             int horas = Integer.parseInt(scanner.nextLine());
 
-            ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas);
+            System.out.print("Salário base: ");
+            double salarioBase = Double.parseDouble(scanner.nextLine());
+
+            ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas, salarioBase);
             controller.cadastrarProfessor(p);
         }
 
@@ -104,17 +113,8 @@ public class ProfessorView {
     // EDITAR PROFESSOR
 
     private void editarProfessor() {
-        System.out.print("\nDigite a matrícula do professor a editar: ");
+        System.out.print("\nDigite a matrícula: ");
         String matricula = scanner.nextLine();
-
-        System.out.print("Novo nome: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Nova titulação: ");
-        String titulacao = scanner.nextLine();
-
-        Double salario = null;
-        Integer horas = null;
 
         Professor p = controller.buscarPorMatricula(matricula);
 
@@ -123,25 +123,32 @@ public class ProfessorView {
             return;
         }
 
+        System.out.print("Novo nome: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Nova titulação: ");
+        String titulacao = scanner.nextLine();
+
+        Double novoSalario = null;
+        Integer novasHoras = null;
+
         if (p instanceof ProfessorVitalicio) {
             System.out.print("Novo salário base: ");
-            salario = Double.parseDouble(scanner.nextLine());
+            novoSalario = Double.parseDouble(scanner.nextLine());
         } else {
-            System.out.print("Novas horas de aula: ");
-            horas = Integer.parseInt(scanner.nextLine());
+            System.out.print("Novas horas aula: ");
+            novasHoras = Integer.parseInt(scanner.nextLine());
         }
 
-        boolean ok = controller.editarProfessor(matricula, nome, titulacao, salario, horas);
+        boolean ok = controller.editarProfessor(matricula, nome, titulacao, novoSalario, novasHoras);
 
-        if (ok)
-            System.out.println("Professor atualizado!");
-        else
-            System.out.println("Erro ao atualizar.");
+        System.out.println(ok ? "Atualizado!" : "Erro ao atualizar.");
     }
 
     // CALCULAR SALaRIO
     private void calcularSalario() {
-        System.out.print("\nDigite a matrícula: ");
+
+        System.out.print("Matrícula: ");
         String matricula = scanner.nextLine();
 
         Double salario = controller.calcularSalario(matricula);

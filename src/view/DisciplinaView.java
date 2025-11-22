@@ -19,7 +19,7 @@ public class DisciplinaView {
 
     public DisciplinaView(DisciplinaController controller, AlunoController alunoController) {
         this.controller = controller;
-        this.alunoController = alunoController;  // ✔ inicializa
+        this.alunoController = alunoController; // ✔ inicializa
     }
 
     public void menu() {
@@ -32,19 +32,36 @@ public class DisciplinaView {
             System.out.println("3 - Editar Disciplina");
             System.out.println("4 - Remover Disciplina");
             System.out.println("5 - Visualizar Alunos Matriculados");
+            System.out.println("6 - Gerar Relatorio Disciplinas");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
 
             opcao = Integer.parseInt(scanner.nextLine());
 
             switch (opcao) {
-                case 1: cadastrarDisciplina(); break;
-                case 2: listarDisciplinas(); break;
-                case 3: editarDisciplina(); break;
-                case 4: removerDisciplina(); break;
-                case 5: visualizarAlunos(); break;
-                case 0: System.out.println("Encerrando..."); break;
-                default: System.out.println("Opção inválida.");
+                case 1:
+                    cadastrarDisciplina();
+                    break;
+                case 2:
+                    listarDisciplinas();
+                    break;
+                case 3:
+                    editarDisciplina();
+                    break;
+                case 4:
+                    removerDisciplina();
+                    break;
+                case 5:
+                    visualizarAlunos();
+                    break;
+                case 6:
+                    relatorioDisciplina();
+                    break;
+                case 0:
+                    System.out.println("Encerrando...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
             }
         }
     }
@@ -75,8 +92,7 @@ public class DisciplinaView {
         if (tipo == 1) {
             DisciplinaObrigatoria d = new DisciplinaObrigatoria(nome, codigo, cargaHoraria, responsavel);
             controller.cadastrarDisciplina(d);
-        } 
-        else {
+        } else {
             System.out.print("Registrar interesse? (1 - Sim / 2 - Não): ");
             int opc = Integer.parseInt(scanner.nextLine());
             String interesse = (opc == 1 ? "Interesse registrado" : "Nenhum interesse");
@@ -134,8 +150,6 @@ public class DisciplinaView {
         System.out.println(ok ? "Disciplina atualizada!" : "Erro ao atualizar.");
     }
 
-
-
     private void visualizarAlunos() {
 
         System.out.print("\nCódigo da disciplina: ");
@@ -153,4 +167,43 @@ public class DisciplinaView {
             System.out.println(a.getNome() + " - " + a.getMatricula());
         }
     }
+
+    private void relatorioDisciplina() {
+
+        int totalAlunos = alunoController.listarAlunos().size();
+
+        for (Disciplina disciplina : controller.listarDisciplinas()) {
+
+            System.out.println("\n------------------------------");
+            System.out.println("Disciplina: " + disciplina.getNome());
+            System.out.println("Código: " + disciplina.getCodigo());
+
+            // Verifica o tipo via instanceof tradicional
+            if (disciplina instanceof DisciplinaObrigatoria) {
+
+                System.out.println("Tipo: Obrigatória");
+
+            } else if (disciplina instanceof DisciplinaEletiva) {
+
+                DisciplinaEletiva eletiva = (DisciplinaEletiva) disciplina;
+
+                System.out.println("Tipo: Eletiva");
+                System.out.println("Interesse: " + eletiva.getRegistroInteresse());
+
+                double popularidade = eletiva.calcularPopularidade(totalAlunos);
+                System.out.printf("Popularidade: %.2f%%\n", popularidade);
+            }
+
+            // Lista alunos matriculados
+            System.out.println("Alunos matriculados:");
+            if (disciplina.getAlunosMatriculados().isEmpty()) {
+                System.out.println("(Nenhum aluno matriculado)");
+            } else {
+                for (Aluno aluno : disciplina.getAlunosMatriculados()) {
+                    System.out.println("- " + aluno.getNome());
+                }
+            }
+        }
+    }
+
 }
