@@ -9,19 +9,19 @@ public class AlunoRepository {
      // Lista que armazena os alunos
     private List<Aluno> alunos = new ArrayList<>();
 
-    // Método save() — cadastrar aluno
+    // Metodo save() — cadastrar aluno
     public void save(Aluno aluno) {
         alunos.add(aluno);
     }
 
-    // Método findAll() — listar todos
+    // Metodo findAll() — listar todos
     public List<Aluno> findAll() {
         return alunos;
     }
 
 
 
-    //Método findByMatricula() — buscar aluno  específico para remover
+    //Metodo findByMatricula() — buscar aluno  específico para remover
     public Aluno findByMatricula(String matricula) {
         for (Aluno p : alunos) {
             if (p.getMatricula().equals(matricula)) {

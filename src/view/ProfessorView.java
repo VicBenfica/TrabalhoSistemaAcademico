@@ -9,6 +9,8 @@ import src.model.Disciplina;
 import src.model.Professor;
 import src.model.ProfessorSubstituto;
 import src.model.ProfessorVitalicio;
+import src.model.Projeto;
+import src.controller.ProjetoController;
 
 // ler dados (Scanner)
 // mostrar informacoes na tela (System.out.println)
@@ -18,11 +20,16 @@ public class ProfessorView {
     private Scanner scanner = new Scanner(System.in);
     private ProfessorController controller;
     private DisciplinaController disciplinaController;
+    private ProjetoController projetoController;
 
-    public ProfessorView(ProfessorController controller, DisciplinaController disciplinaController) {
-        this.controller = controller;
-        this.disciplinaController = disciplinaController;
-    }
+    public ProfessorView(ProfessorController controller,
+                     DisciplinaController disciplinaController,
+                     ProjetoController projetoController) {
+    this.controller = controller;
+    this.disciplinaController = disciplinaController;
+    this.projetoController = projetoController;
+}
+
 
     // MENU PRINCIPAL
     public void menu() {
@@ -36,8 +43,10 @@ public class ProfessorView {
             System.out.println("4 - Listar Professores");
             System.out.println("5 - Remover Professor");
             System.out.println("6 - Gerar Relatorio");
+            System.out.println("7 - Cadastrar Projeto (Professor Vitalicio)");
+            System.out.println("8 - Listar Projetos de um Professor");
             System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma opcao: ");
 
             opcao = Integer.parseInt(scanner.nextLine());
 
@@ -60,11 +69,17 @@ public class ProfessorView {
                 case 6:
                     relatorioProfessor();
                     break;
+                case 7:
+                    cadastrarProjeto();
+                    break;
+                 case 8:
+                    listarProjetosProfessor();
+                    break;
                 case 0:
                     System.out.println("Encerrando...");
                     break;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opcao invalida.");
             }
         }
     }
@@ -72,25 +87,29 @@ public class ProfessorView {
     // CADASTRAR PROFESSOR
     private void cadastrarProfessor() {
         System.out.println("\n=== Cadastro de Professor ===");
-        System.out.println("1 - Professor Vitalício");
+        System.out.println("1 - Professor Vitalicio");
         System.out.println("2 - Professor Substituto");
         System.out.print("Tipo: ");
         int tipo = Integer.parseInt(scanner.nextLine());
-
+        
+        if (tipo != 1 && tipo != 2) {
+            System.out.println("Tipo invalido!");
+            return;
+        }
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
-        System.out.print("Matrícula: ");
+        System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
 
-        System.out.print("Titulação: ");
+        System.out.print("Titulacao: ");
         String titulacao = scanner.nextLine();
 
         if (tipo == 1) {
-            System.out.print("Salário base: ");
+            System.out.print("Salario base: ");
             double salarioBase = Double.parseDouble(scanner.nextLine());
 
-            System.out.print("Possui doutorado? (1-Sim / 2-Não): ");
+            System.out.print("Possui doutorado? (1-Sim / 2-Nao): ");
             int doutorado = Integer.parseInt(scanner.nextLine());
 
             ProfessorVitalicio p = new ProfessorVitalicio(nome, matricula, titulacao, salarioBase, doutorado);
@@ -100,7 +119,7 @@ public class ProfessorView {
             System.out.print("Horas aula: ");
             int horas = Integer.parseInt(scanner.nextLine());
 
-            System.out.print("Salário base: ");
+            System.out.print("Salario base: ");
             double salarioBase = Double.parseDouble(scanner.nextLine());
 
             ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas, salarioBase);
@@ -113,27 +132,23 @@ public class ProfessorView {
     // EDITAR PROFESSOR
 
     private void editarProfessor() {
-        System.out.print("\nDigite a matrícula: ");
+        System.out.print("\nDigite a matricula: ");
         String matricula = scanner.nextLine();
 
         Professor p = controller.buscarPorMatricula(matricula);
 
-        if (p == null) {
-            System.out.println("Professor não encontrado.");
-            return;
-        }
 
         System.out.print("Novo nome: ");
         String nome = scanner.nextLine();
 
-        System.out.print("Nova titulação: ");
+        System.out.print("Nova titulacao: ");
         String titulacao = scanner.nextLine();
 
         Double novoSalario = null;
         Integer novasHoras = null;
 
         if (p instanceof ProfessorVitalicio) {
-            System.out.print("Novo salário base: ");
+            System.out.print("Novo salario base: ");
             novoSalario = Double.parseDouble(scanner.nextLine());
         } else {
             System.out.print("Novas horas aula: ");
@@ -144,65 +159,122 @@ public class ProfessorView {
 
         System.out.println(ok ? "Atualizado!" : "Erro ao atualizar.");
     }
+private void calcularSalario() {
 
-    // CALCULAR SALaRIO
-    private void calcularSalario() {
-
-        System.out.print("Matrícula: ");
+        System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
 
         Double salario = controller.calcularSalario(matricula);
 
         if (salario == null) {
-            System.out.println("Professor não encontrado.");
-        } else {
-            System.out.println("Salário: R$ " + salario);
+            System.out.println("Professor nao encontrado.");
+            return;
         }
+
+        System.out.println("Salario: R$ " + salario);
     }
 
-    // LISTAR PROFESSORES
+    //        LISTAR PROFESSORES
+
     private void listarProfessores() {
+
         List<Professor> lista = controller.listarProfessores();
 
         System.out.println("\n=== LISTA DE PROFESSORES ===");
 
         for (Professor p : lista) {
-            System.out.println(
-                    p.getNome() + " | " +
-                            p.getMatricula() + " | " +
-                            p.getTitulacao());
+            System.out.println(p.getNome() + " | " + p.getMatricula() + " | " + p.getTitulacao());
         }
     }
 
-    // REMOVER PROFESSOR
+    //        REMOVER PROFESSOR
     private void removerProfessor() {
-        System.out.print("\nDigite a matrícula para remover: ");
+
+        System.out.print("\nDigite a matricula para remover: ");
         String matricula = scanner.nextLine();
 
         boolean ok = controller.removerProfessor(matricula);
 
-        if (ok)
-            System.out.println("Removido com sucesso!");
-        else
-            System.out.println("Professor não encontrado.");
+        System.out.println(ok ? "Removido com sucesso!" : "Professor nao encontrado.");
     }
 
-    // GERAR RELAToRIO PROFESSOR
+    //       RELATORIO PROFESSORES
     public void relatorioProfessor() {
-        for (Professor professor : controller.listarProfessores()) {
-            int qtdDisciplina = 0;
-            System.out.println("Professor: " + professor.getNome());
-            System.out.println("Disciplinas ministradas pelo Professor: ");
 
-            for (Disciplina disciplina : disciplinaController.listarDisciplinas()) {
-                if (disciplina.getProfessorResponsavel().getMatricula().equals(professor.getMatricula())) {
-                    qtdDisciplina++;
-                    System.out.println("- " + disciplina.getNome());
+        for (Professor professor : controller.listarProfessores()) {
+
+            System.out.println("\n---------------------------------");
+            System.out.println("Professor: " + professor.getNome());
+            System.out.println("Titulação: " + professor.getTitulacao());
+            System.out.println("Salario: RS " + professor.calcularSalario());
+
+            // Disciplinas ministradas — AGORA usando professor.getDisciplinas()
+            System.out.println("Disciplinas ministradas:");
+            if (professor.getDisciplinas().isEmpty()) {
+                System.out.println("(Nenhuma disciplina)");
+            } else {
+                for (Disciplina d : professor.getDisciplinas()) {
+                    System.out.println("- " + d.getNome());
                 }
             }
+        }
+    }
 
-            System.out.println("Quantidade de Disciplinas ministradas: " + qtdDisciplina);
-            System.out.println("Salário do professor: " + professor.calcularSalario());
+    //      CADASTRAR PROJETO
+    public void cadastrarProjeto() {
+
+        System.out.print("\nDigite a matricula do professor: ");
+        String matricula = scanner.nextLine();
+
+        Professor professor = controller.buscarPorMatricula(matricula);
+
+        if (professor == null) {
+            System.out.println("Professor nao encontrado.");
+            return;
+        }
+
+        if (!(professor instanceof ProfessorVitalicio)) {
+            System.out.println("Erro: somente professores vitalicios podem ter projetos!");
+            return;
+        }
+
+        ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
+
+        System.out.print("Nome do projeto: ");
+        String nomeProjeto = scanner.nextLine();
+
+        Projeto projeto = new Projeto(nomeProjeto, vitalicio);
+
+        vitalicio.adicionarProjeto(projeto);
+        projetoController.cadastrarProjeto(projeto);
+
+        System.out.println("Projeto cadastrado com sucesso!");
+    }
+
+    //      LISTAR PROJETOS
+    public void listarProjetosProfessor() {
+
+        System.out.print("\nDigite a matricula do professor: ");
+        String matricula = scanner.nextLine();
+
+        Professor professor = controller.buscarPorMatricula(matricula);
+
+        if (!(professor instanceof ProfessorVitalicio)) {
+            System.out.println("Professor nao eh vitalício ou nao existe.");
+            return;
+        }
+
+        ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
+
+        System.out.println("\nProjetos do professor: " + professor.getNome());
+
+        if (vitalicio.getProjetos().isEmpty()) {
+            System.out.println("(Nenhum projeto cadastrado)");
+            return;
+        }
+
+        for (Projeto p : vitalicio.getProjetos()) {
+            System.out.println("- " + p.getNome());
         }
     }
 

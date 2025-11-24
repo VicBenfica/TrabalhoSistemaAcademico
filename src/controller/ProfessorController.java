@@ -65,9 +65,7 @@ public class ProfessorController {
         return true;
     }
 
-    // --------------------------------------
     // 5) CALCULAR SALaRIO
-    // --------------------------------------
     public Double calcularSalario(String matricula) {
         Professor p = professorRepository.findByMatricula(matricula);
 

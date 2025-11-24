@@ -8,16 +8,17 @@ public class ProfessorRepository {
     // Lista que armazena os professores
     private List<Professor> professores = new ArrayList<>();
 
-    // Método save() — cadastrar professor
+    // Metodo save(), cadastrar professor
     public void save(Professor professor) {
         professores.add(professor);
     }
 
-    // Método findAll() — listar todos
+    // Metodo findAll(), listar todos
     public List<Professor> findAll() {
         return professores;
     }
-    //Método findByMatricula() — buscar professor específico para remover
+
+    // Metodo findByMatricula() — buscar professor especifico para remover
     public Professor findByMatricula(String matricula) {
         for (Professor p : professores) {
             if (p.getMatricula().equals(matricula)) {
@@ -27,7 +28,7 @@ public class ProfessorRepository {
         return null;
     }
 
-    // Método delete() — remover professor
+    // Metodo delete(), remover professor
     public boolean delete(String matricula) {
         Professor p = findByMatricula(matricula);
         if (p != null) {

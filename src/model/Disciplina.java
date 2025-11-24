@@ -15,8 +15,8 @@ public abstract class Disciplina {
         this.nome = nome;
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
-        this.professorResponsavel = professorResponsavel;
-        this.alunosMatriculados = new ArrayList<>(); 
+        this.alunosMatriculados = new ArrayList<>();
+        setProfessorResponsavel(professorResponsavel); // importante: ja cria relacao bidirecional
     }
 
     // GETTERS
@@ -53,16 +53,36 @@ public abstract class Disciplina {
         this.cargaHoraria = cargaHoraria;
     }
 
-    public void setProfessorResponsavel(Professor professorResponsavel) {
-        this.professorResponsavel = professorResponsavel;
+    public void setProfessorResponsavel(Professor novoProfessor) {
+
+        // Se ja tinha professor antes, remover da lista dele
+        if (this.professorResponsavel != null) {
+            this.professorResponsavel.removerDisciplina(this);
+        }
+
+        // Atualiza professor
+        this.professorResponsavel = novoProfessor;
+
+        // Adiciona disciplina na lista do novo professor
+        if (novoProfessor != null) {
+            novoProfessor.adicionarDisciplina(this);
+        }
     }
 
-    // MÉTODOS PARA GERENCIAR ALUNOS
+    // METODOS PARA GERENCIAR ALUNOS
     public void adicionarAluno(Aluno aluno) {
         alunosMatriculados.add(aluno);
     }
 
     public void removerAluno(Aluno aluno) {
         alunosMatriculados.remove(aluno);
+    }
+
+    // Remover professor da disciplina
+    public void removerProfessor() {
+        if (this.professorResponsavel != null) {
+            this.professorResponsavel.removerDisciplina(this);
+        }
+        this.professorResponsavel = null;
     }
 }

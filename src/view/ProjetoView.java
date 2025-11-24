@@ -1,22 +1,23 @@
 package src.view;
 
 import src.model.Professor;
-import src.model.ProfessorSubstituto;
 import src.model.ProfessorVitalicio;
 import src.model.Projeto;
 
 import java.util.List;
 import java.util.Scanner;
 
-import src.controller.*;
+import src.controller.ProjetoController;
+import src.controller.ProfessorController;
 
 public class ProjetoView {
+
     private Scanner scanner = new Scanner(System.in);
-    private ProjetoController controller;
+    private ProjetoController projetoController;
     private ProfessorController professorController;
 
-    public ProjetoView(ProjetoController controller, ProfessorController professorController) {
-        this.controller = controller;
+    public ProjetoView(ProjetoController projetoController, ProfessorController professorController) {
+        this.projetoController = projetoController;
         this.professorController = professorController;
     }
 
@@ -25,11 +26,11 @@ public class ProjetoView {
         int opcao = -1;
 
         while (opcao != 0) {
-            System.out.println("\n=== MENU PROJETO ===");
+            System.out.println("\n=== MENU PROJETOS ===");
             System.out.println("1 - Cadastrar Projeto");
             System.out.println("2 - Listar Projetos");
             System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma opcao: ");
 
             opcao = Integer.parseInt(scanner.nextLine());
 
@@ -38,59 +39,72 @@ public class ProjetoView {
                     cadastrarProjeto();
                     break;
                 case 2:
-                    listarProjeto();
+                    listarProjetos();
+                    break;
+                case 0:
+                    System.out.println("Saindo do menu de projetos...");
                     break;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opcao invalida!");
             }
         }
     }
-    //CADASTRAR
+
+    // CADASTRAR PROJETO
     private void cadastrarProjeto() {
-    System.out.println("\n=== Cadastro de Projeto ===");
 
-    System.out.print("Nome do projeto: ");
-    String nome = scanner.nextLine();
+        System.out.print("\nDigite a matricula do professor vitalicio: ");
+        String matricula = scanner.nextLine();
 
-    System.out.print("Matrícula do Professor Vitalício: ");
-    String matricula = scanner.nextLine();
+        // Busca o professor
+        Professor professor = professorController.buscarPorMatricula(matricula);
 
-    // Buscar professor
-    Professor p = professorController.buscarPorMatricula(matricula);
+        if (professor == null) {
+            System.out.println("Professor nao encontrado.");
+            return;
+        }
 
-    if (p == null || !(p instanceof ProfessorVitalicio)) {
-        System.out.println("Professor não encontrado ou não é vitalício!");
-        return;
+        // Valida tipo
+        if (!(professor instanceof ProfessorVitalicio)) {
+            System.out.println("Erro: Somente professores vitalicios podem cadastrar projetos.");
+            return;
+        }
+
+        ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
+
+        System.out.print("Digite o nome do projeto: ");
+        String nome = scanner.nextLine();
+
+        // Cria o projeto
+        Projeto projeto = new Projeto(nome, vitalicio);
+
+        // Adiciona no professor
+        vitalicio.adicionarProjeto(projeto);
+
+        // Salva no repositório
+        projetoController.cadastrarProjeto(projeto);
+
+        System.out.println("Projeto cadastrado com sucesso!");
     }
 
-    ProfessorVitalicio profV = (ProfessorVitalicio) p;
+    // LISTAR PROJETOS
+    private void listarProjetos() {
 
-    // Criar projeto vinculado ao professor
-    Projeto projeto = new Projeto(nome, profV);
+        List<Projeto> lista = projetoController.listarProjeto();
 
-    // Adicionar ao professor também (bidirecional)
-    profV.adicionarProjeto(projeto);
+        System.out.println("\n=== LISTA DE PROJETOS ===");
 
-    controller.cadastrarProjeto(projeto);
+        if (lista.isEmpty()) {
+            System.out.println("Nenhum projeto cadastrado.");
+            return;
+        }
 
-    System.out.println("Projeto cadastrado com sucesso!");
-}
-
-
-    // LISTAR PROEJETOS
-    private void listarProjeto() {
-    List<Projeto> lista = controller.listarProjeto();
-
-    System.out.println("\n=== LISTA DE PROJETOS ===");
-
-    for (Projeto p : lista) {
-        System.out.println(
-            p.getNome() + " | " +
-            p.getProfessor().getNome() + " | Matricula: " +
-            p.getProfessor().getMatricula()
-        );
+        for (Projeto p : lista) {
+            System.out.println(
+                "Projeto: " + p.getNome() +
+                " | Professor: " + p.getProfessor().getNome() +
+                " | Matricula: " + p.getProfessor().getMatricula()
+            );
+        }
     }
-}
-
-
 }

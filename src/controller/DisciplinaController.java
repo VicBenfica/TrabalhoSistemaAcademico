@@ -3,7 +3,10 @@ package src.controller;
 import java.util.List;
 import src.model.Aluno;
 import src.model.Disciplina;
+import src.model.DisciplinaObrigatoria;
 import src.model.Professor;
+import src.model.ProfessorSubstituto;
+import src.model.ProfessorVitalicio;
 import src.repository.DisciplinaRepository;
 
 public class DisciplinaController {
@@ -14,22 +17,56 @@ public class DisciplinaController {
         this.disciplinaRepository = repository;
     }
 
-    // 1) Cadastrar Disciplina
-    public void cadastrarDisciplina(Disciplina disciplina) {
+    // cadastrar disciplina normalmente
+    public boolean cadastrarDisciplina(Disciplina disciplina) {
+        // Regra: obrigatória deve ter pelo menos 60 horas
+        if (disciplina instanceof DisciplinaObrigatoria) {
+            if (disciplina.getCargaHoraria() < 60) {
+                return false; // inválido
+            }
+        }
+
         disciplinaRepository.save(disciplina);
+        return true;
     }
 
-    // 2) Listar Disciplinas
     public List<Disciplina> listarDisciplinas() {
         return disciplinaRepository.findAll();
     }
 
-    // 3) Buscar disciplina
     public Disciplina buscarPorCodigo(String codigo) {
         return disciplinaRepository.findByCodigo(codigo);
     }
 
-    // 4) Editar Disciplina
+    // Regras de negocio
+    public boolean definirProfessor(String codigo, Professor professor) {
+
+        Disciplina d = disciplinaRepository.findByCodigo(codigo);
+
+        if (d == null)
+            return false;
+
+        if (professor == null) {
+            d.setProfessorResponsavel(null);
+            return true;
+        }
+
+        // Valida limite
+        if (professor instanceof ProfessorSubstituto &&
+                professor.getDisciplinas().size() >= 2) {
+            return false;
+        }
+
+        if (professor instanceof ProfessorVitalicio &&
+                professor.getDisciplinas().size() >= 3) {
+            return false;
+        }
+
+        d.setProfessorResponsavel(professor);
+        return true;
+    }
+
+    // editar disciplina
     public boolean editarDisciplina(String codigo,
             String novoNome,
             Integer novaCargaHoraria,
@@ -37,21 +74,21 @@ public class DisciplinaController {
 
         Disciplina d = disciplinaRepository.findByCodigo(codigo);
 
-        if (d == null) {
+        if (d == null)
             return false;
-        }
 
         if (novoNome != null)
             d.setNome(novoNome);
+
         if (novaCargaHoraria != null)
             d.setCargaHoraria(novaCargaHoraria);
+
         if (novoProfessorResponsavel != null)
-            d.setProfessorResponsavel(novoProfessorResponsavel);
+            return definirProfessor(codigo, novoProfessorResponsavel);
 
         return true;
     }
 
-    // 5) Remover
     public boolean removerDisciplina(String codigo) {
         return disciplinaRepository.delete(codigo);
     }

@@ -29,7 +29,7 @@ public class AlunoView {
             System.out.println("3 - Matricular aluno em disciplina");
             System.out.println("4 - Desmatricular aluno de disciplina");
             System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma opcao: ");
 
             opcao = Integer.parseInt(scanner.nextLine());
 
@@ -50,7 +50,7 @@ public class AlunoView {
                     System.out.println("Encerrando...");
                     break;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opcao invalida.");
             }
         }
     }
@@ -63,10 +63,10 @@ public class AlunoView {
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
-        System.out.print("Matrícula: ");
+        System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
 
-        // provisório – você ainda vai ligar aluno → disciplinas depois
+        
         Aluno aluno = new Aluno(nome, matricula);
 
         controller.cadastrarAluno(aluno);
@@ -88,23 +88,23 @@ public class AlunoView {
     // matricular aluno
     private void matricularAluno() {
 
-        System.out.print("Código da disciplina: ");
+        System.out.print("Codigo da disciplina: ");
         String codigo = scanner.nextLine();
 
         Disciplina disciplina = disciplinaController.buscarPorCodigo(codigo);
 
         if (disciplina == null) {
-            System.out.println("Disciplina não encontrada!");
+            System.out.println("Disciplina nao encontrada!");
             return;
         }
 
-        System.out.print("Matrícula do aluno: ");
+        System.out.print("Matricula do aluno: ");
         String matricula = scanner.nextLine();
 
         Aluno aluno = controller.buscarPorMatricula(matricula);
 
         if (aluno == null) {
-            System.out.println("Aluno não encontrado!");
+            System.out.println("Aluno nao encontrado!");
             return;
         }
 
@@ -116,23 +116,23 @@ public class AlunoView {
     // desmatricular aluno
     private void desmatricularAluno() {
 
-        System.out.print("Código da disciplina: ");
+        System.out.print("Codigo da disciplina: ");
         String codigo = scanner.nextLine();
 
         Disciplina disciplina = disciplinaController.buscarPorCodigo(codigo);
 
         if (disciplina == null) {
-            System.out.println("Disciplina não encontrada!");
+            System.out.println("Disciplina nao encontrada!");
             return;
         }
 
-        System.out.print("Matrícula do aluno: ");
+        System.out.print("Matricula do aluno: ");
         String matricula = scanner.nextLine();
 
         Aluno aluno = controller.buscarPorMatricula(matricula);
 
         if (aluno == null) {
-            System.out.println("Aluno não encontrado!");
+            System.out.println("Aluno nao encontrado!");
             return;
         }
 
