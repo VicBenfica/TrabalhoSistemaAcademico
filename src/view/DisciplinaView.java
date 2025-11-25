@@ -11,6 +11,7 @@ import src.model.Disciplina;
 import src.model.DisciplinaEletiva;
 import src.model.DisciplinaObrigatoria;
 import src.model.Professor;
+import src.model.ProfessorVitalicio;
 
 public class DisciplinaView {
 
@@ -269,6 +270,9 @@ public class DisciplinaView {
     }
 
     private void adicionarProfessor() {
+        boolean ok = false;
+        int confirmar = 0;
+        boolean disp = false;
         System.out.print("Digite a matricula do professor: ");
         String matricula = scanner.nextLine();
 
@@ -283,7 +287,45 @@ public class DisciplinaView {
             return;
         }
 
-        boolean ok = controller.definirProfessor(codigo, prof);
+        if(d instanceof DisciplinaObrigatoria){
+            if(prof instanceof ProfessorVitalicio){
+                if(prof.getDisciplinas().size() < 3){
+                    ok = controller.definirProfessor(codigo, prof);
+                }
+                else{
+                    System.out.println("O professor '" + prof.getNome() + "' já está ministrando o máximo de disciplina possivel para seu cargo");
+                }
+            }
+            else{
+                for(Professor proTemp : profController.listarProfessores()){
+                    if(proTemp instanceof ProfessorVitalicio){
+                        if(proTemp.getDisciplinas().size() < 3){
+                            disp = true;
+                            System.out.println("Ha professor vitalicio disponivel: " + proTemp.getNome() + " Matricula: " + proTemp.getMatricula());
+                        }
+                    }
+                }
+                if(disp == false){
+                    while (confirmar != 1 && confirmar != 2) {
+                        System.out.println("Voce esta atribuindo uma disciplina obrigatoria para um professor subtituto, recomenda-se remanejar os professores vitalicios. Deseja continuar? 1 - Sim ou 2 - Nao");
+                        confirmar  = scanner.nextInt();
+                        scanner.nextLine();
+                        if(confirmar != 1 && confirmar != 2){
+                            System.out.println("Opcao invalida, tente novamente");
+                        }
+                    }
+                    if(confirmar == 1){
+                        ok = controller.definirProfessor(codigo, prof);
+                    }
+                    else{
+                        System.out.println("Operacao Cancelada");
+                    }
+                }
+            }
+        }
+        else{
+            ok = controller.definirProfessor(codigo, prof);
+        }
 
         if (!ok) {
             System.out.println("Erro: professor excedeu o limite permitido!");
