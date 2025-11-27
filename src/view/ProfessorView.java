@@ -38,7 +38,7 @@ public class ProfessorView {
             System.out.println("\n=== MENU PROFESSORES ===");
             System.out.println("1 - Cadastrar Professor");
             System.out.println("2 - Editar Professor");
-            System.out.println("3 - Calcular Salário");
+            System.out.println("3 - Calcular Salario");
             System.out.println("4 - Listar Professores");
             System.out.println("5 - Remover Professor");
             System.out.println("6 - Gerar Relatorio");

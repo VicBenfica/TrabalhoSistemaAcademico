@@ -9,11 +9,16 @@ public class ProfessorSubstituto extends Professor {
         this.horasAula = horasAula;
     }
 
-    public int getHorasAula() { return horasAula; }
-    public void setHorasAula(int horasAula) { this.horasAula = horasAula; }
+    public int getHorasAula() {
+        return horasAula;
+    }
+
+    public void setHorasAula(int horasAula) {
+        this.horasAula = horasAula;
+    }
 
     @Override
     public double calcularSalario() {
-        return horasAula * 80.0; 
+        return horasAula * 80.0;
     }
 }

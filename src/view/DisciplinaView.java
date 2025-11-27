@@ -76,7 +76,7 @@ public class DisciplinaView {
                     System.out.println("Encerrando menu de disciplinas...");
                     break;
                 default:
-                    System.out.println("Opção invalida.");
+                    System.out.println("Opcao invalida.");
             }
         }
     }
@@ -290,8 +290,8 @@ public class DisciplinaView {
                 if (prof.getDisciplinas().size() < 3) {
                     ok = controller.definirProfessor(codigo, prof);
                 } else {
-                    System.out.println("O professor '" + prof.getNome()
-                            + "' já está ministrando o máximo de disciplina possivel para seu cargo");
+                    System.out.println("O professor " + prof.getNome()
+                            + " ja esta ministrando o maximo de disciplina possivel para seu cargo");
                 }
             } else {
                 for (Professor proTemp : profController.listarProfessores()) {
@@ -306,7 +306,7 @@ public class DisciplinaView {
                 if (disp == false) {
                     while (confirmar != 1 && confirmar != 2) {
                         System.out.println(
-                                "Voce esta atribuindo uma disciplina obrigatoria para um professor subtituto, recomenda-se remanejar os professores vitalicios. Deseja continuar? 1 - Sim ou 2 - Nao");
+                                "Voce esta atribuindo uma disciplina obrigatoria para um professor substituto, recomenda-se remanejar os professores vitalicios. Deseja continuar? 1 - Sim ou 2 - Nao");
                         confirmar = scanner.nextInt();
                         scanner.nextLine();
                         if (confirmar != 1 && confirmar != 2) {

@@ -19,10 +19,10 @@ public class DisciplinaController {
 
     // cadastrar disciplina normalmente
     public boolean cadastrarDisciplina(Disciplina disciplina) {
-        // Regra: obrigatória deve ter pelo menos 60 horas
+        // Regra: obrigatoria deve ter pelo menos 60 horas
         if (disciplina instanceof DisciplinaObrigatoria) {
             if (disciplina.getCargaHoraria() < 60) {
-                return false; // inválido
+                return false; // invAlido
             }
         }
 

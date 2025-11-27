@@ -1,6 +1,5 @@
 package src.repository;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import src.model.Disciplina;
@@ -19,8 +18,7 @@ public class DisciplinaRepository {
         return disciplinas;
     }
 
-
-    //Metodo findByCodigo() — buscar disciplina específica para remover
+    // Metodo findByCodigo() — buscar disciplina específica para remover
     public Disciplina findByCodigo(String codigo) {
         for (Disciplina p : disciplinas) {
             if (p.getCodigo().equals(codigo)) {
@@ -30,7 +28,7 @@ public class DisciplinaRepository {
         return null;
     }
 
-    // Metodo delete() — remover 
+    // Metodo delete() — remover
     public boolean delete(String codigo) {
         Disciplina p = findByCodigo(codigo);
         if (p != null) {

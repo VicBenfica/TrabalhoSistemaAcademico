@@ -66,7 +66,6 @@ public class AlunoView {
         System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
 
-        
         Aluno aluno = new Aluno(nome, matricula);
 
         controller.cadastrarAluno(aluno);
@@ -81,7 +80,7 @@ public class AlunoView {
 
         System.out.println("\n=== LISTA DE ALUNOS ===");
         for (Aluno a : lista) {
-            System.out.println(a.getNome() + " | " + a.getMatricula());
+            System.out.println("Nome: " + a.getNome() + " | " + "Matricula: " + a.getMatricula());
         }
     }
 

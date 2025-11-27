@@ -12,7 +12,6 @@ public class ProfessorVitalicio extends Professor {
     public ProfessorVitalicio(String nome, String matricula, String titulacao, double salarioBase, int doutorado) {
         super(nome, matricula, titulacao, salarioBase);
         this.doutorado = doutorado;
-       
 
     }
 
