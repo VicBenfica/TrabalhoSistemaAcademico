@@ -146,7 +146,8 @@ public class DisciplinaView {
 
         System.out.println("\n=== LISTA DE DISCIPLINAS ===");
         for (Disciplina d : lista) {
-            System.out.println("Nome: "+d.getNome() + " | " + "Codigo: "+ d.getCodigo() + " | " +"Carga Horaria: "+ d.getCargaHoraria());
+            System.out.println("Nome: " + d.getNome() + " | " + "Codigo: " + d.getCodigo() + " | " + "Carga Horaria: "
+                    + d.getCargaHoraria());
         }
     }
 
@@ -247,28 +248,23 @@ public class DisciplinaView {
     }
 
     private void removerProfessor() {
-        System.out.print("Digite a matricula do professor: ");
+        System.out.print("Digite a matricula do professor que deseja remover da disciplina: ");
         String matricula = scanner.nextLine();
-
         System.out.print("Digite o codigo da disciplina: ");
         String codigo = scanner.nextLine();
 
-        Disciplina d = controller.buscarPorCodigo(codigo);
+        for (Disciplina disciplinaTemp : controller.listarDisciplinas()) {
+            if (disciplinaTemp.getCodigo().equals(codigo) &&
+                    disciplinaTemp.getProfessorResponsavel() != null &&
+                    disciplinaTemp.getProfessorResponsavel().getMatricula().equals(matricula)) {
 
-        if (d == null) {
-            System.out.println("Disciplina nao encontrada!");
-            return;
+                disciplinaTemp.removerProfessor(); 
+                System.out.println("Professor removido da disciplina!");
+                return;
+            }
         }
 
-        Professor prof = d.getProfessorResponsavel();
-
-        if (prof == null || !prof.getMatricula().equals(matricula)) {
-            System.out.println("Esse professor nao eh responsavel por essa disciplina!");
-            return;
-        }
-
-        controller.definirProfessor(codigo, null);
-        System.out.println("Professor removido da disciplina!");
+        System.out.println("Professor não encontrado na disciplina.");
     }
 
     private void adicionarProfessor() {
@@ -289,43 +285,42 @@ public class DisciplinaView {
             return;
         }
 
-        if(d instanceof DisciplinaObrigatoria){
-            if(prof instanceof ProfessorVitalicio){
-                if(prof.getDisciplinas().size() < 3){
+        if (d instanceof DisciplinaObrigatoria) {
+            if (prof instanceof ProfessorVitalicio) {
+                if (prof.getDisciplinas().size() < 3) {
                     ok = controller.definirProfessor(codigo, prof);
+                } else {
+                    System.out.println("O professor '" + prof.getNome()
+                            + "' já está ministrando o máximo de disciplina possivel para seu cargo");
                 }
-                else{
-                    System.out.println("O professor '" + prof.getNome() + "' já está ministrando o máximo de disciplina possivel para seu cargo");
-                }
-            }
-            else{
-                for(Professor proTemp : profController.listarProfessores()){
-                    if(proTemp instanceof ProfessorVitalicio){
-                        if(proTemp.getDisciplinas().size() < 3){
+            } else {
+                for (Professor proTemp : profController.listarProfessores()) {
+                    if (proTemp instanceof ProfessorVitalicio) {
+                        if (proTemp.getDisciplinas().size() < 3) {
                             disp = true;
-                            System.out.println("Ha professor vitalicio disponivel: " + proTemp.getNome() + " Matricula: " + proTemp.getMatricula());
+                            System.out.println("Ha professor vitalicio disponivel: " + proTemp.getNome()
+                                    + " Matricula: " + proTemp.getMatricula());
                         }
                     }
                 }
-                if(disp == false){
+                if (disp == false) {
                     while (confirmar != 1 && confirmar != 2) {
-                        System.out.println("Voce esta atribuindo uma disciplina obrigatoria para um professor subtituto, recomenda-se remanejar os professores vitalicios. Deseja continuar? 1 - Sim ou 2 - Nao");
-                        confirmar  = scanner.nextInt();
+                        System.out.println(
+                                "Voce esta atribuindo uma disciplina obrigatoria para um professor subtituto, recomenda-se remanejar os professores vitalicios. Deseja continuar? 1 - Sim ou 2 - Nao");
+                        confirmar = scanner.nextInt();
                         scanner.nextLine();
-                        if(confirmar != 1 && confirmar != 2){
+                        if (confirmar != 1 && confirmar != 2) {
                             System.out.println("Opcao invalida, tente novamente");
                         }
                     }
-                    if(confirmar == 1){
+                    if (confirmar == 1) {
                         ok = controller.definirProfessor(codigo, prof);
-                    }
-                    else{
+                    } else {
                         System.out.println("Operacao Cancelada");
                     }
                 }
             }
-        }
-        else{
+        } else {
             ok = controller.definirProfessor(codigo, prof);
         }
 
@@ -337,44 +332,44 @@ public class DisciplinaView {
         System.out.println("Professor atribuido com sucesso!");
     }
 
-    private void registrarInteresse(){
+    private void registrarInteresse() {
         boolean valido = false;
         String matricula = null;
-        while(valido == false){
+        while (valido == false) {
             System.out.println("Se identifique informando sua matricula:");
             matricula = scanner.nextLine();
-            for(Aluno alunoTemp : alunoController.listarAlunos()){
-                if(matricula.equals(alunoTemp.getMatricula())){
+            for (Aluno alunoTemp : alunoController.listarAlunos()) {
+                if (matricula.equals(alunoTemp.getMatricula())) {
                     valido = true;
                     break;
                 }
             }
-            if(valido == false){
-                System.out.println("A matricula informada nao condiz com nenhuma cadastrada no sistema, verifique e tente novamente");
+            if (valido == false) {
+                System.out.println(
+                        "A matricula informada nao condiz com nenhuma cadastrada no sistema, verifique e tente novamente");
             }
         }
         System.out.println("Informe a disciplina que gostaria de registrar interesse: ");
         String codigo = scanner.nextLine();
-        if(controller.buscarPorCodigo(codigo) == null){
+        if (controller.buscarPorCodigo(codigo) == null) {
             System.out.println("O codigo informado não corresponde a nenhuma disciplina cadastrada");
-        }
-        else if(controller.buscarPorCodigo(codigo) instanceof DisciplinaObrigatoria){
-            System.out.println("O codigo informado corresponde a uma disciplina obrigatoria. informe um codigo de uma disciplina Eletiva");
+        } else if (controller.buscarPorCodigo(codigo) instanceof DisciplinaObrigatoria) {
+            System.out.println(
+                    "O codigo informado corresponde a uma disciplina obrigatoria. informe um codigo de uma disciplina Eletiva");
             System.out.println("Disciplinas Eletivas disponiveis para registrar interesse:");
-            for(Disciplina disciplinaTemp : controller.listarDisciplinas()){
-                if(disciplinaTemp instanceof DisciplinaEletiva){
+            for (Disciplina disciplinaTemp : controller.listarDisciplinas()) {
+                if (disciplinaTemp instanceof DisciplinaEletiva) {
                     System.out.println("Nome da disciplina: " + disciplinaTemp.getNome());
                     System.out.println("Codigo da disciplina: " + disciplinaTemp.getCodigo());
                 }
             }
-        }
-        else{
-            for(Disciplina disciplinaTemp : controller.listarDisciplinas()){
-                if(disciplinaTemp instanceof DisciplinaEletiva && disciplinaTemp.getCodigo().equals(codigo)){
-                    ((DisciplinaEletiva)disciplinaTemp).setRegistroInteresse("Sim");
-                    for(Aluno alunoTemp : alunoController.listarAlunos()){
-                        if(alunoTemp.getMatricula().equals(matricula)){
-                            alunoTemp.adicionarInteresse(((DisciplinaEletiva)disciplinaTemp));
+        } else {
+            for (Disciplina disciplinaTemp : controller.listarDisciplinas()) {
+                if (disciplinaTemp instanceof DisciplinaEletiva && disciplinaTemp.getCodigo().equals(codigo)) {
+                    ((DisciplinaEletiva) disciplinaTemp).setRegistroInteresse("Sim");
+                    for (Aluno alunoTemp : alunoController.listarAlunos()) {
+                        if (alunoTemp.getMatricula().equals(matricula)) {
+                            alunoTemp.adicionarInteresse(((DisciplinaEletiva) disciplinaTemp));
                         }
                     }
                 }

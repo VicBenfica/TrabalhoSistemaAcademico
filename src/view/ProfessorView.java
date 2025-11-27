@@ -23,13 +23,12 @@ public class ProfessorView {
     private ProjetoController projetoController;
 
     public ProfessorView(ProfessorController controller,
-                     DisciplinaController disciplinaController,
-                     ProjetoController projetoController) {
-    this.controller = controller;
-    this.disciplinaController = disciplinaController;
-    this.projetoController = projetoController;
-}
-
+            DisciplinaController disciplinaController,
+            ProjetoController projetoController) {
+        this.controller = controller;
+        this.disciplinaController = disciplinaController;
+        this.projetoController = projetoController;
+    }
 
     // MENU PRINCIPAL
     public void menu() {
@@ -72,7 +71,7 @@ public class ProfessorView {
                 case 7:
                     cadastrarProjeto();
                     break;
-                 case 8:
+                case 8:
                     listarProjetosProfessor();
                     break;
                 case 0:
@@ -91,7 +90,7 @@ public class ProfessorView {
         System.out.println("2 - Professor Substituto");
         System.out.print("Tipo: ");
         int tipo = Integer.parseInt(scanner.nextLine());
-        
+
         if (tipo != 1 && tipo != 2) {
             System.out.println("Tipo invalido!");
             return;
@@ -137,7 +136,6 @@ public class ProfessorView {
 
         Professor p = controller.buscarPorMatricula(matricula);
 
-
         System.out.print("Novo nome: ");
         String nome = scanner.nextLine();
 
@@ -159,7 +157,8 @@ public class ProfessorView {
 
         System.out.println(ok ? "Atualizado!" : "Erro ao atualizar.");
     }
-private void calcularSalario() {
+
+    private void calcularSalario() {
 
         System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
@@ -174,7 +173,7 @@ private void calcularSalario() {
         System.out.println("Salario: R$ " + salario);
     }
 
-    //        LISTAR PROFESSORES
+    // LISTAR PROFESSORES
 
     private void listarProfessores() {
 
@@ -187,7 +186,7 @@ private void calcularSalario() {
         }
     }
 
-    //        REMOVER PROFESSOR
+    // REMOVER PROFESSOR
     private void removerProfessor() {
 
         System.out.print("\nDigite a matricula para remover: ");
@@ -198,43 +197,53 @@ private void calcularSalario() {
         System.out.println(ok ? "Removido com sucesso!" : "Professor nao encontrado.");
     }
 
-    //       RELATORIO PROFESSORES
-    public void relatorioProfessor() {
-        int qtd = 0;
-        for (Professor professor : controller.listarProfessores()) {
+    // RELATORIO PROFESSORES
+public void relatorioProfessor() {
 
-            System.out.println("\n---------------------------------");
-            System.out.println("Professor: " + professor.getNome());
-            System.out.println("Titulação: " + professor.getTitulacao());
-            System.out.println("Salario: RS " + professor.calcularSalario());
-            if(professor instanceof ProfessorVitalicio){
-                System.out.println("Cargo: Professor Vitalicio");
-                for(Projeto projetoTemp : projetoController.listarProjeto()){
-                    if(projetoTemp.getProfessor().equals(professor)){
-                        ((ProfessorVitalicio)professor).getProjetos();
-                    }
-                }
-            }
-            else{
-                System.out.println("Cargo: Professor Substituto");
-            }
+    for (Professor professor : controller.listarProfessores()) {
+
+        int qtd = 0; // O contador de disciplinas DEVE ser inicializado AQUI, para CADA professor
+
+        System.out.println("\n---------------------------------");
+        System.out.println("Professor: " + professor.getNome());
+        System.out.println("Titulação: " + professor.getTitulacao());
+        System.out.println("Salario: R$ " + professor.calcularSalario());
+
+        // Substituição do Type Pattern (Java 16+) para compatibilidade.
+        if (professor instanceof ProfessorVitalicio) {
+            ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
             
+            System.out.println("Cargo: Professor Vitalicio");
 
-            // Disciplinas ministradas — AGORA usando professor.getDisciplinas()
-            System.out.println("Disciplinas ministradas:");
-            if (professor.getDisciplinas().isEmpty()) {
-                System.out.println("(Nenhuma disciplina)");
+            // ---- PROJETOS ----
+            System.out.println("Projetos:");
+            if (vitalicio.getProjetos().isEmpty()) {
+                System.out.println("(Nenhum projeto)");
             } else {
-                for (Disciplina d : professor.getDisciplinas()) {
-                    System.out.println("- " + d.getNome());
-                    qtd++;
+                for (Projeto projeto : vitalicio.getProjetos()) {
+                    System.out.println("- " + projeto.getNome());
                 }
             }
-            System.out.println("Quantidade de disciplinas ministradas: " + qtd);
+        } else {
+            System.out.println("Cargo: Professor Substituto");
         }
-    }
 
-    //      CADASTRAR PROJETO
+        // ---- DISCIPLINAS ----
+        System.out.println("Disciplinas ministradas:");
+        if (professor.getDisciplinas().isEmpty()) {
+            System.out.println("(Nenhuma disciplina)");
+        } else {
+            for (Disciplina d : professor.getDisciplinas()) {
+                System.out.println("- " + d.getNome());
+                qtd++; // Conta as disciplinas DESTE professor
+            }
+        }
+
+        System.out.println("Quantidade de disciplinas ministradas: " + qtd);
+    }
+}
+
+    // CADASTRAR PROJETO
     public void cadastrarProjeto() {
 
         System.out.print("\nDigite a matricula do professor: ");
@@ -265,7 +274,7 @@ private void calcularSalario() {
         System.out.println("Projeto cadastrado com sucesso!");
     }
 
-    //      LISTAR PROJETOS
+    // LISTAR PROJETOS
     public void listarProjetosProfessor() {
 
         System.out.print("\nDigite a matricula do professor: ");
@@ -274,7 +283,7 @@ private void calcularSalario() {
         Professor professor = controller.buscarPorMatricula(matricula);
 
         if (!(professor instanceof ProfessorVitalicio)) {
-            System.out.println("Professor nao eh vitalício ou nao existe.");
+            System.out.println("Professor nao eh vitalicio ou nao existe.");
             return;
         }
 
