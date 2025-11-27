@@ -70,6 +70,8 @@ public class DisciplinaView {
                 case 8:
                     adicionarProfessor();
                     break;
+                case 9:
+                    registrarInteresse();
                 case 0:
                     System.out.println("Encerrando menu de disciplinas...");
                     break;
@@ -333,5 +335,50 @@ public class DisciplinaView {
         }
 
         System.out.println("Professor atribuido com sucesso!");
+    }
+
+    private void registrarInteresse(){
+        boolean valido = false;
+        String matricula = null;
+        while(valido == false){
+            System.out.println("Se identifique informando sua matricula:");
+            matricula = scanner.nextLine();
+            for(Aluno alunoTemp : alunoController.listarAlunos()){
+                if(matricula.equals(alunoTemp.getMatricula())){
+                    valido = true;
+                    break;
+                }
+            }
+            if(valido == false){
+                System.out.println("A matricula informada nao condiz com nenhuma cadastrada no sistema, verifique e tente novamente");
+            }
+        }
+        System.out.println("Informe a disciplina que gostaria de registrar interesse: ");
+        String codigo = scanner.nextLine();
+        if(controller.buscarPorCodigo(codigo) == null){
+            System.out.println("O codigo informado não corresponde a nenhuma disciplina cadastrada");
+        }
+        else if(controller.buscarPorCodigo(codigo) instanceof DisciplinaObrigatoria){
+            System.out.println("O codigo informado corresponde a uma disciplina obrigatoria. informe um codigo de uma disciplina Eletiva");
+            System.out.println("Disciplinas Eletivas disponiveis para registrar interesse:");
+            for(Disciplina disciplinaTemp : controller.listarDisciplinas()){
+                if(disciplinaTemp instanceof DisciplinaEletiva){
+                    System.out.println("Nome da disciplina: " + disciplinaTemp.getNome());
+                    System.out.println("Codigo da disciplina: " + disciplinaTemp.getCodigo());
+                }
+            }
+        }
+        else{
+            for(Disciplina disciplinaTemp : controller.listarDisciplinas()){
+                if(disciplinaTemp instanceof DisciplinaEletiva && disciplinaTemp.getCodigo().equals(codigo)){
+                    ((DisciplinaEletiva)disciplinaTemp).setRegistroInteresse("Sim");
+                    for(Aluno alunoTemp : alunoController.listarAlunos()){
+                        if(alunoTemp.getMatricula().equals(matricula)){
+                            alunoTemp.adicionarInteresse(((DisciplinaEletiva)disciplinaTemp));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

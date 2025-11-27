@@ -200,13 +200,25 @@ private void calcularSalario() {
 
     //       RELATORIO PROFESSORES
     public void relatorioProfessor() {
-
+        int qtd = 0;
         for (Professor professor : controller.listarProfessores()) {
 
             System.out.println("\n---------------------------------");
             System.out.println("Professor: " + professor.getNome());
             System.out.println("Titulação: " + professor.getTitulacao());
             System.out.println("Salario: RS " + professor.calcularSalario());
+            if(professor instanceof ProfessorVitalicio){
+                System.out.println("Cargo: Professor Vitalicio");
+                for(Projeto projetoTemp : projetoController.listarProjeto()){
+                    if(projetoTemp.getProfessor().equals(professor)){
+                        ((ProfessorVitalicio)professor).getProjetos();
+                    }
+                }
+            }
+            else{
+                System.out.println("Cargo: Professor Substituto");
+            }
+            
 
             // Disciplinas ministradas — AGORA usando professor.getDisciplinas()
             System.out.println("Disciplinas ministradas:");
@@ -215,8 +227,10 @@ private void calcularSalario() {
             } else {
                 for (Disciplina d : professor.getDisciplinas()) {
                     System.out.println("- " + d.getNome());
+                    qtd++;
                 }
             }
+            System.out.println("Quantidade de disciplinas ministradas: " + qtd);
         }
     }
 

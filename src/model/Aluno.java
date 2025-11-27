@@ -7,9 +7,11 @@ public class Aluno {
     private String nome;
     private String matricula;
     private List<Disciplina> disciplinasMatriculadas;
+    private List<DisciplinaEletiva> interesses;
 
     public Aluno(String nome, String matricula) {
         this.disciplinasMatriculadas = new ArrayList<>();
+        this.interesses  = new ArrayList<>();
         this.matricula = matricula;
         this.nome = nome;
     }
@@ -38,5 +40,11 @@ public class Aluno {
         this.nome = nome;
     }
 
-    
+    public void adicionarInteresse(DisciplinaEletiva d) {
+        interesses.add(d);
+    }
+
+    public List<DisciplinaEletiva> getInteresses() {
+        return interesses;
+    }    
 }
