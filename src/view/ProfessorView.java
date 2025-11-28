@@ -47,7 +47,12 @@ public class ProfessorView {
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opcao: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida! Digite apenas numeros.");
+                continue;
+            }
 
             switch (opcao) {
                 case 1:
@@ -83,45 +88,66 @@ public class ProfessorView {
         }
     }
 
-    // CADASTRAR PROFESSOR
     private void cadastrarProfessor() {
         System.out.println("\n=== Cadastro de Professor ===");
         System.out.println("1 - Professor Vitalicio");
         System.out.println("2 - Professor Substituto");
+
         System.out.print("Tipo: ");
-        int tipo = Integer.parseInt(scanner.nextLine());
+        int tipo = scanner.nextInt();
 
         if (tipo != 1 && tipo != 2) {
             System.out.println("Tipo invalido!");
             return;
         }
+
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
+
+        if (nome.trim().isEmpty()) {
+            System.out.println("Erro: o nome do professor nao pode ser vazio.");
+            return;
+        }
 
         System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
 
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode ser vazia.");
+            return;
+        }
+
         System.out.print("Titulacao: ");
         String titulacao = scanner.nextLine();
 
+        if (titulacao.trim().isEmpty()) {
+            System.out.println("Erro: a titulacao do professor nao pode ser vazia.");
+            return;
+        }
+
+        // PROFESSOR VITALICIO
         if (tipo == 1) {
             System.out.print("Salario base: ");
-            double salarioBase = Double.parseDouble(scanner.nextLine());
+            double salarioBase = scanner.nextDouble();
 
             System.out.print("Possui doutorado? (1-Sim / 2-Nao): ");
-            int doutorado = Integer.parseInt(scanner.nextLine());
+            int doutorado = scanner.nextInt();
 
             ProfessorVitalicio p = new ProfessorVitalicio(nome, matricula, titulacao, salarioBase, doutorado);
-            controller.cadastrarProfessor(p);
 
-        } else {
+            controller.cadastrarProfessor(p);
+        }
+
+        // PROFESSOR SUBSTITUTO
+        else {
             System.out.print("Horas aula: ");
-            int horas = Integer.parseInt(scanner.nextLine());
+            int horas = scanner.nextInt();
 
             System.out.print("Salario base: ");
-            double salarioBase = Double.parseDouble(scanner.nextLine());
+            double salarioBase = scanner.nextDouble();
 
             ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas, salarioBase);
+
             controller.cadastrarProfessor(p);
         }
 
@@ -134,6 +160,7 @@ public class ProfessorView {
         System.out.print("\nDigite a matricula: ");
         String matricula = scanner.nextLine();
 
+        
         Professor p = controller.buscarPorMatricula(matricula);
 
         System.out.print("Novo nome: ");
@@ -162,6 +189,11 @@ public class ProfessorView {
 
         System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
+
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode ser vazia.");
+            return;
+        }
 
         Double salario = controller.calcularSalario(matricula);
 
@@ -192,56 +224,61 @@ public class ProfessorView {
         System.out.print("\nDigite a matricula para remover: ");
         String matricula = scanner.nextLine();
 
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode ser vazia.");
+            return;
+        }
+
         boolean ok = controller.removerProfessor(matricula);
 
         System.out.println(ok ? "Removido com sucesso!" : "Professor nao encontrado.");
     }
 
     // RELATORIO PROFESSORES
-public void relatorioProfessor() {
+    public void relatorioProfessor() {
 
-    for (Professor professor : controller.listarProfessores()) {
+        for (Professor professor : controller.listarProfessores()) {
 
-        int qtd = 0; // O contador de disciplinas DEVE ser inicializado AQUI, para CADA professor
+            int qtd = 0; // O contador de disciplinas DEVE ser inicializado AQUI, para CADA professor
 
-        System.out.println("\n---------------------------------");
-        System.out.println("Professor: " + professor.getNome());
-        System.out.println("Titulação: " + professor.getTitulacao());
-        System.out.println("Salario: R$ " + professor.calcularSalario());
+            System.out.println("\n---------------------------------");
+            System.out.println("Professor: " + professor.getNome());
+            System.out.println("Titulação: " + professor.getTitulacao());
+            System.out.println("Salario: R$ " + professor.calcularSalario());
 
-        // Substituição do Type Pattern (Java 16+) para compatibilidade.
-        if (professor instanceof ProfessorVitalicio) {
-            ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
-            
-            System.out.println("Cargo: Professor Vitalicio");
+            // Substituição do Type Pattern (Java 16+) para compatibilidade.
+            if (professor instanceof ProfessorVitalicio) {
+                ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
 
-            // ---- PROJETOS ----
-            System.out.println("Projetos:");
-            if (vitalicio.getProjetos().isEmpty()) {
-                System.out.println("(Nenhum projeto)");
+                System.out.println("Cargo: Professor Vitalicio");
+
+                // ---- PROJETOS ----
+                System.out.println("Projetos:");
+                if (vitalicio.getProjetos().isEmpty()) {
+                    System.out.println("(Nenhum projeto)");
+                } else {
+                    for (Projeto projeto : vitalicio.getProjetos()) {
+                        System.out.println("- " + projeto.getNome());
+                    }
+                }
             } else {
-                for (Projeto projeto : vitalicio.getProjetos()) {
-                    System.out.println("- " + projeto.getNome());
+                System.out.println("Cargo: Professor Substituto");
+            }
+
+            // ---- DISCIPLINAS ----
+            System.out.println("Disciplinas ministradas:");
+            if (professor.getDisciplinas().isEmpty()) {
+                System.out.println("(Nenhuma disciplina)");
+            } else {
+                for (Disciplina d : professor.getDisciplinas()) {
+                    System.out.println("- " + d.getNome());
+                    qtd++; // Conta as disciplinas DESTE professor
                 }
             }
-        } else {
-            System.out.println("Cargo: Professor Substituto");
-        }
 
-        // ---- DISCIPLINAS ----
-        System.out.println("Disciplinas ministradas:");
-        if (professor.getDisciplinas().isEmpty()) {
-            System.out.println("(Nenhuma disciplina)");
-        } else {
-            for (Disciplina d : professor.getDisciplinas()) {
-                System.out.println("- " + d.getNome());
-                qtd++; // Conta as disciplinas DESTE professor
-            }
+            System.out.println("Quantidade de disciplinas ministradas: " + qtd);
         }
-
-        System.out.println("Quantidade de disciplinas ministradas: " + qtd);
     }
-}
 
     // CADASTRAR PROJETO
     public void cadastrarProjeto() {

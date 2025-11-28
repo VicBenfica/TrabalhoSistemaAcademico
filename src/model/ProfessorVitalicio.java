@@ -7,7 +7,6 @@ public class ProfessorVitalicio extends Professor {
 
     private List<Projeto> projetos = new ArrayList<>();
     private int doutorado;
-    private double bonus = 0.0;
 
     public ProfessorVitalicio(String nome, String matricula, String titulacao, double salarioBase, int doutorado) {
         super(nome, matricula, titulacao, salarioBase);

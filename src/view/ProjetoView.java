@@ -32,7 +32,12 @@ public class ProjetoView {
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opcao: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida! Digite apenas numeros.");
+                continue;
+            }
 
             switch (opcao) {
                 case 1:
@@ -47,6 +52,7 @@ public class ProjetoView {
                 default:
                     System.out.println("Opcao invalida!");
             }
+
         }
     }
 
@@ -55,6 +61,11 @@ public class ProjetoView {
 
         System.out.print("\nDigite a matricula do professor vitalicio: ");
         String matricula = scanner.nextLine();
+
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor não pode ser vazia.");
+            return;
+        }
 
         // Busca o professor
         Professor professor = professorController.buscarPorMatricula(matricula);
@@ -74,6 +85,18 @@ public class ProjetoView {
 
         System.out.print("Digite o nome do projeto: ");
         String nome = scanner.nextLine();
+
+        if (nome.trim().isEmpty()) {
+            System.out.println("Erro: o nome do projeto não pode ser vazio.");
+            return;
+        }
+        //Impede nomes duplicados
+        for (Projeto proj : vitalicio.getProjetos()) {
+            if (proj.getNome().equalsIgnoreCase(nome)) {
+                System.out.println("Erro: esse professor já possui um projeto com esse nome.");
+                return;
+            }
+        }
 
         // Cria o projeto
         Projeto projeto = new Projeto(nome, vitalicio);
@@ -101,10 +124,9 @@ public class ProjetoView {
 
         for (Projeto p : lista) {
             System.out.println(
-                "Projeto: " + p.getNome() +
-                " | Professor: " + p.getProfessor().getNome() +
-                " | Matricula: " + p.getProfessor().getMatricula()
-            );
+                    "Projeto: " + p.getNome() +
+                            " | Professor: " + p.getProfessor().getNome() +
+                            " | Matricula: " + p.getProfessor().getMatricula());
         }
     }
 }
