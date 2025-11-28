@@ -232,6 +232,13 @@ public class DisciplinaView {
         System.out.print("Nova carga horaria: ");
         int novaCarga = Integer.parseInt(scanner.nextLine());
 
+        if (d instanceof DisciplinaObrigatoria){
+            if (novaCarga < 60) {
+                System.out.println("Erro: disciplinas obrigatorias devem ter no minimo 60 horas.");
+                return;
+            }
+        }
+
         System.out.print("Nova matricula do professor responsavel: ");
         String novaMatricula = scanner.nextLine();
 
@@ -291,7 +298,6 @@ public class DisciplinaView {
 
                 DisciplinaEletiva eletiva = (DisciplinaEletiva) disciplina;
 
-                
                 System.out.println("Tipo: Eletiva");
                 System.out.println("Interesse: " + eletiva.getRegistroInteresse());
 
@@ -313,7 +319,7 @@ public class DisciplinaView {
     private void removerProfessor() {
         System.out.print("Digite a matricula do professor que deseja remover da disciplina: ");
         String matricula = scanner.nextLine();
-        
+
         if (matricula.trim().isEmpty()) {
             System.out.println("Erro: a matricula do professor nao pode estar vazia.");
             return;
@@ -338,7 +344,7 @@ public class DisciplinaView {
             }
         }
 
-        System.out.println("Professor não encontrado na disciplina.");
+        System.out.println("Professor nao encontrado na disciplina.");
     }
 
     private void adicionarProfessor() {

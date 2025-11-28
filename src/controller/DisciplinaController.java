@@ -77,6 +77,10 @@ public class DisciplinaController {
         if (d == null)
             return false;
 
+        if (d instanceof DisciplinaObrigatoria && novaCargaHoraria < 60) {
+            return false;
+        }
+        
         if (novoNome != null)
             d.setNome(novoNome);
 
