@@ -1,5 +1,6 @@
 package src.view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,8 +21,7 @@ public class DisciplinaView {
     private AlunoController alunoController;
     private ProfessorController profController;
 
-    public DisciplinaView(DisciplinaController controller, AlunoController alunoController,
-            ProfessorController profController) {
+    public DisciplinaView(DisciplinaController controller, AlunoController alunoController, ProfessorController profController) {
         this.controller = controller;
         this.alunoController = alunoController;
         this.profController = profController;
@@ -193,7 +193,11 @@ public class DisciplinaView {
         }
     }
 
-    private void removerDisciplina() {
+        private void removerDisciplina() {
+        boolean ok = false;
+        boolean certo = false;
+        String opcao = "0";
+
         System.out.print("\nCodigo da disciplina para remover: ");
         String codigo = scanner.nextLine();
 
@@ -201,7 +205,63 @@ public class DisciplinaView {
             System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
             return;
         }
-        boolean ok = controller.removerDisciplina(codigo);
+
+        for (Disciplina disciplinaTemp : controller.listarDisciplinas()) {
+
+            if (!disciplinaTemp.getCodigo().equals(codigo)){
+                continue;
+            } 
+
+            while (!certo) {
+
+                // 1 — Verifica professor
+                if (disciplinaTemp.getProfessorResponsavel() != null) {
+                    System.out.println("A disciplina ainda tem um professor responsavel.");
+                    System.out.println("Deseja remove-lo agora?\n1 - Sim\n2 - Nao");
+
+                    opcao = scanner.nextLine();
+                    while (!opcao.equals("1") && !opcao.equals("2")) {
+                        System.out.println("Opcao invalida, tente novamente:");
+                        opcao = scanner.nextLine();
+                    }
+
+                    if (opcao.equals("1")) {
+                        disciplinaTemp.removerProfessor();
+                    } 
+                    else {
+                        System.out.println("Operacao cancelada.");
+                        return;
+                    }
+                }
+
+                // 2 — Verifica alunos
+                if (!disciplinaTemp.getAlunosMatriculados().isEmpty()) {
+                    System.out.println("A disciplina ainda tem alunos matriculados.");
+                    System.out.println("Deseja remove-los agora?\n1 - Sim\n2 - Nao");
+
+                    opcao = scanner.nextLine();
+                    while (!opcao.equals("1") && !opcao.equals("2")) {
+                        System.out.println("Opcao invalida, tente novamente:");
+                        opcao = scanner.nextLine();
+                    }
+
+                    if (opcao.equals("1")) {
+                        List<Aluno> copia = new ArrayList<>(disciplinaTemp.getAlunosMatriculados());
+                        for (Aluno a : copia) {
+                            disciplinaTemp.removerAluno(a);
+                        }
+                    } 
+                    else {
+                        System.out.println("Operacao cancelada.");
+                        return;
+                    }
+                }
+                certo = true;
+            }
+        }
+        if (certo) {
+            ok = controller.removerDisciplina(codigo);
+        }
 
         System.out.println(ok ? "Disciplina removida!" : "Disciplina nao encontrada.");
     }
