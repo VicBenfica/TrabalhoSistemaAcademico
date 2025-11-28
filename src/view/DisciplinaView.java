@@ -87,101 +87,165 @@ public class DisciplinaView {
     }
 
     private void cadastrarDisciplina() {
-        String opcao = "3";
-        Professor responsavel = null;
-        int tipo = 0;
         System.out.println("\n=== Cadastro de Disciplina ===");
-        System.out.println("1 - Obrigatoria");
-        System.out.println("2 - Eletiva");
+    
+        int tipo = 0;
         while (tipo != 1 && tipo != 2) {
-            System.out.print("Tipo: ");
+            System.out.println("1 - Obrigatoria");
+            System.out.println("2 - Eletiva");
+            System.out.println("Tipo: ");
             tipo = Integer.parseInt(scanner.nextLine());
             if (tipo != 1 && tipo != 2) {
-                System.out.println("Tipo invalido!");
+                System.out.println("Tipo invalido");
             }
         }
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
 
+        System.out.println("Nome: ");
+        String nome = scanner.nextLine();
         if (nome.trim().isEmpty()) {
             System.out.println("Erro: o nome da disciplina nao pode estar vazio.");
             return;
         }
 
-        System.out.print("Codigo: ");
+        System.out.println("Codigo: ");
         String codigo = scanner.nextLine();
-
         if (codigo.trim().isEmpty()) {
             System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
             return;
         }
-
-        System.out.print("Carga horaria:");
+    
+        System.out.println("Carga horaria: ");
         int cargaHoraria = Integer.parseInt(scanner.nextLine());
-
-        while (opcao.equals("1") == false && opcao.equals("2") == false) {
-            System.out.println("Deseja adicionar um professor neste momento?\n1 - Sim\n2 - Nao");
-            opcao = scanner.nextLine();
-
-            if (opcao.equals("1") == false && opcao.equals("2") == false) {
-                System.out.println("Opcao invalida, tente novamente");
+        if (tipo == 1) {
+            while (cargaHoraria < 60) {
+                System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas");
+                System.out.println("Informe novamente: ");
+                cargaHoraria = Integer.parseInt(scanner.nextLine());
             }
         }
 
+        Professor responsavel = null;
+        String opcao = "";
+    
+        System.out.println("Deseja adicionar um professor agora?\n1 - Sim\n2 - Nao");
+        while (!opcao.equals("1") && !opcao.equals("2")) {
+            opcao = scanner.nextLine();
+            if (!opcao.equals("1") && !opcao.equals("2")) {
+                System.out.println("Opcao invalida, tente novamente");
+            }
+        }
+    
         if (opcao.equals("1")) {
+
             if (profController.listarProfessores().size() > 0) {
-                while (responsavel == null) {
-                    System.out.print("Matricula do professor responsavel: ");
-                    String matriculaProfessor = scanner.nextLine();
+    
+                boolean professorValido = false;
+    
+                while (!professorValido) {
+    
+                    System.out.println("Matricula do professor responsavel: ");
+                    String mat = scanner.nextLine();
+    
+                    Professor temp = profController.buscarPorMatricula(mat);
+    
+                    if (temp == null) {
+                        System.out.println("Professor nao encontrado.");
+                        continue;
+                    }
 
-                    responsavel = profController.buscarPorMatricula(matriculaProfessor);
+                    if (tipo == 1) {
+                        boolean existeVitalicio = false;
+                        for (Professor p : profController.listarProfessores()) {
+                            if (p instanceof ProfessorVitalicio) {
+                                existeVitalicio = true;
+                                break;
+                            }
+                        }
 
-                    if (responsavel == null) {
-                        System.out.println("Professor nao encontrado, verifique e tente novamente");
+                        if (existeVitalicio && !(temp instanceof ProfessorVitalicio)) {
+                            System.out.println("Somente professores vitalicios podem assumir disciplinas obrigatorias.");
+                            continue;
+                        }
+                    }
+    
+                    responsavel = temp;
+                    professorValido = true;
+                }
+    
+            } else {
+                opcao = "";
+                System.out.println("Nao existem professores cadastrados. Continuar sem professor?\n1 - Sim\n2 - Nao");
+    
+                while (!opcao.equals("1") && !opcao.equals("2")) {
+                    opcao = scanner.nextLine();
+                    if (!opcao.equals("1") && !opcao.equals("2")) {
+                        System.out.println("Opcao invalida.");
                     }
                 }
-            } else {
-                System.out.println(
-                        "Ainda nao existem professores cadastrados no sistema, continue com o cadastro da disciolina e depois adicione o professor");
+    
+                if (opcao.equals("2")) {
+                    System.out.println("Cancelando cadastro.");
+                    return;
+                }
             }
         }
 
         if (tipo == 1) {
-            if (cargaHoraria < 60) {
-                while (cargaHoraria < 60) {
-                    System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas!");
-                    System.out.println("Informe a carga horaria novamente: ");
-                    cargaHoraria = Integer.parseInt(scanner.nextLine());
-                }
-            }
             DisciplinaObrigatoria d = new DisciplinaObrigatoria(nome, codigo, cargaHoraria, responsavel);
-
-            boolean ok = controller.cadastrarDisciplina(d);
-            if (!ok) {
-                System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas!");
+    
+            if (!controller.cadastrarDisciplina(d)) {
+                System.out.println("Erro ao cadastrar disciplina obrigatoria.");
+                return;
             }
 
-            // atribuir professor pela regra
             if (responsavel != null) {
-                if (!controller.definirProfessor(codigo, responsavel)) {
-                    System.out.println("Erro: professor excedeu o limite de disciplinas!");
+                boolean atribuido = controller.definirProfessor(codigo, responsavel);
+    
+                while (!atribuido) {
+                    System.out.println("Erro: professor excedeu o limite de disciplinas.");
+                    System.out.println("Informe a matricula de outro professor ou digite 0 para pular:");
+    
+                    String mat = scanner.nextLine();
+                    if (mat.equals("0")) break;
+    
+                    Professor novo = profController.buscarPorMatricula(mat);
+    
+                    if (novo == null) {
+                        System.out.println("Professor nao encontrado.");
+                        continue;
+                    }
+    
+                    if (!(novo instanceof ProfessorVitalicio)) {
+                        System.out.println("Somente vitalicios podem assumir obrigatorias.");
+                        continue;
+                    }
+    
+                    atribuido = controller.definirProfessor(codigo, novo);
+    
+                    if (atribuido) {
+                        System.out.println("Professor atribuido!");
+                    }
                 }
             }
-
+    
+            System.out.println("Disciplina obrigatoria cadastrada!");
+    
         } else {
-            System.out.print("Registrar interesse? (1 - Sim / 2 - Nao): ");
-            int opc = Integer.parseInt(scanner.nextLine());
-            String interesse = (opc == 1 ? "Interesse registrado" : "Nenhum interesse");
-
+            System.out.println("Registrar interesse? (1 - Sim / 2 - Nao)");
+            int op = Integer.parseInt(scanner.nextLine());
+            String interesse = (op == 1 ? "Interesse registrado" : "Nenhum interesse");
+    
             DisciplinaEletiva d = new DisciplinaEletiva(nome, codigo, cargaHoraria, responsavel, interesse);
             controller.cadastrarDisciplina(d);
+    
             if (responsavel != null) {
                 controller.definirProfessor(codigo, responsavel);
             }
+    
+            System.out.println("Disciplina eletiva cadastrada!");
         }
-
-        System.out.println("Disciplina cadastrada!");
     }
+    
 
     private void listarDisciplinas() {
         List<Disciplina> lista = controller.listarDisciplinas();
