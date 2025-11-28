@@ -88,16 +88,25 @@ public class ProfessorView {
         }
     }
 
+    // CADASTRAR
     private void cadastrarProfessor() {
+
         System.out.println("\n=== Cadastro de Professor ===");
         System.out.println("1 - Professor Vitalicio");
         System.out.println("2 - Professor Substituto");
 
+        int tipo = 0;
         System.out.print("Tipo: ");
-        int tipo = scanner.nextInt();
+
+        try {
+            tipo = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Erro: digite apenas números.");
+            return;
+        }
 
         if (tipo != 1 && tipo != 2) {
-            System.out.println("Tipo invalido!");
+            System.out.println("Erro: tipo invalido! Digite 1 ou 2.");
             return;
         }
 
@@ -113,7 +122,12 @@ public class ProfessorView {
         String matricula = scanner.nextLine();
 
         if (matricula.trim().isEmpty()) {
-            System.out.println("Erro: a matricula do professor nao pode ser vazia.");
+            System.out.println("Erro: a matricula nao pode ser vazia.");
+            return;
+        }
+
+        if (controller.buscarPorMatricula(matricula) != null) {
+            System.out.println("Erro: ja existe um professor com essa matricula.");
             return;
         }
 
@@ -121,17 +135,42 @@ public class ProfessorView {
         String titulacao = scanner.nextLine();
 
         if (titulacao.trim().isEmpty()) {
-            System.out.println("Erro: a titulacao do professor nao pode ser vazia.");
+            System.out.println("Erro: a titulacao nao pode ser vazia.");
             return;
         }
 
         // PROFESSOR VITALICIO
         if (tipo == 1) {
+
             System.out.print("Salario base: ");
-            double salarioBase = scanner.nextDouble();
+            double salarioBase = 0;
+
+            try {
+                salarioBase = Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: digite um valor numerico valido.");
+                return;
+            }
+
+            if (salarioBase < 0) {
+                System.out.println("Erro: salario nao pode ser negativo.");
+                return;
+            }
 
             System.out.print("Possui doutorado? (1-Sim / 2-Nao): ");
-            int doutorado = scanner.nextInt();
+            int doutorado = 0;
+
+            try {
+                doutorado = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: digite apenas numeros.");
+                return;
+            }
+
+            if (doutorado != 1 && doutorado != 2) {
+                System.out.println("Erro: opcao invalida.");
+                return;
+            }
 
             ProfessorVitalicio p = new ProfessorVitalicio(nome, matricula, titulacao, salarioBase, doutorado);
 
@@ -139,12 +178,37 @@ public class ProfessorView {
         }
 
         // PROFESSOR SUBSTITUTO
+
         else {
             System.out.print("Horas aula: ");
-            int horas = scanner.nextInt();
+            int horas = 0;
+
+            try {
+                horas = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: digite um numero valido.");
+                return;
+            }
+
+            if (horas < 0) {
+                System.out.println("Erro: horas nao podem ser negativas.");
+                return;
+            }
 
             System.out.print("Salario base: ");
-            double salarioBase = scanner.nextDouble();
+            double salarioBase = 0;
+
+            try {
+                salarioBase = Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: digite um numero valido.");
+                return;
+            }
+
+            if (salarioBase < 0) {
+                System.out.println("Erro: salario nao pode ser negativo.");
+                return;
+            }
 
             ProfessorSubstituto p = new ProfessorSubstituto(nome, matricula, titulacao, horas, salarioBase);
 
@@ -155,29 +219,77 @@ public class ProfessorView {
     }
 
     // EDITAR PROFESSOR
-
+    // EDITAR PROFESSOR
     private void editarProfessor() {
+
         System.out.print("\nDigite a matricula: ");
         String matricula = scanner.nextLine();
 
-        
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode estar vazia.");
+            return;
+        }
+
         Professor p = controller.buscarPorMatricula(matricula);
+
+        if (p == null) {
+            System.out.println("Erro: professor nao encontrado.");
+            return;
+        }
 
         System.out.print("Novo nome: ");
         String nome = scanner.nextLine();
 
+        if (nome.trim().isEmpty()) {
+            System.out.println("Erro: o nome do professor nao pode estar vazio.");
+            return;
+        }
+
         System.out.print("Nova titulacao: ");
         String titulacao = scanner.nextLine();
+
+        if (titulacao.trim().isEmpty()) {
+            System.out.println("Erro: a titulacao nao pode estar vazia.");
+            return;
+        }
 
         Double novoSalario = null;
         Integer novasHoras = null;
 
+        // EDITAR PROFESSOR VITALICIO
         if (p instanceof ProfessorVitalicio) {
+
             System.out.print("Novo salario base: ");
-            novoSalario = Double.parseDouble(scanner.nextLine());
+            String entrada = scanner.nextLine();
+
+            try {
+                novoSalario = Double.parseDouble(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: digite um valor numerico valido.");
+                return;
+            }
+
+            if (novoSalario <= 0) {
+                System.out.println("Erro: salario deve ser maior que zero.");
+                return;
+            }
+
         } else {
+            // EDITAR PROFESSOR SUBSTITUTO
             System.out.print("Novas horas aula: ");
-            novasHoras = Integer.parseInt(scanner.nextLine());
+            String entrada = scanner.nextLine();
+
+            try {
+                novasHoras = Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: digite um numero inteiro valido.");
+                return;
+            }
+
+            if (novasHoras <= 0) {
+                System.out.println("Erro: horas devem ser maior que zero.");
+                return;
+            }
         }
 
         boolean ok = controller.editarProfessor(matricula, nome, titulacao, novoSalario, novasHoras);
@@ -239,14 +351,13 @@ public class ProfessorView {
 
         for (Professor professor : controller.listarProfessores()) {
 
-            int qtd = 0; // O contador de disciplinas DEVE ser inicializado AQUI, para CADA professor
+            int qtd = 0;
 
             System.out.println("\n---------------------------------");
             System.out.println("Professor: " + professor.getNome());
-            System.out.println("Titulação: " + professor.getTitulacao());
+            System.out.println("Titulacao: " + professor.getTitulacao());
             System.out.println("Salario: R$ " + professor.calcularSalario());
 
-            // Substituição do Type Pattern (Java 16+) para compatibilidade.
             if (professor instanceof ProfessorVitalicio) {
                 ProfessorVitalicio vitalicio = (ProfessorVitalicio) professor;
 
@@ -254,6 +365,7 @@ public class ProfessorView {
 
                 // ---- PROJETOS ----
                 System.out.println("Projetos:");
+
                 if (vitalicio.getProjetos().isEmpty()) {
                     System.out.println("(Nenhum projeto)");
                 } else {
@@ -261,6 +373,7 @@ public class ProfessorView {
                         System.out.println("- " + projeto.getNome());
                     }
                 }
+
             } else {
                 System.out.println("Cargo: Professor Substituto");
             }
@@ -272,7 +385,7 @@ public class ProfessorView {
             } else {
                 for (Disciplina d : professor.getDisciplinas()) {
                     System.out.println("- " + d.getNome());
-                    qtd++; // Conta as disciplinas DESTE professor
+                    qtd++;
                 }
             }
 
@@ -285,6 +398,11 @@ public class ProfessorView {
 
         System.out.print("\nDigite a matricula do professor: ");
         String matricula = scanner.nextLine();
+
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode ser vazia.");
+            return;
+        }
 
         Professor professor = controller.buscarPorMatricula(matricula);
 
@@ -303,6 +421,11 @@ public class ProfessorView {
         System.out.print("Nome do projeto: ");
         String nomeProjeto = scanner.nextLine();
 
+        if (nomeProjeto.trim().isEmpty()) {
+            System.out.println("Erro: o nome do projeto nao pode ser vazio.");
+            return;
+        }
+
         Projeto projeto = new Projeto(nomeProjeto, vitalicio);
 
         vitalicio.adicionarProjeto(projeto);
@@ -316,6 +439,11 @@ public class ProfessorView {
 
         System.out.print("\nDigite a matricula do professor: ");
         String matricula = scanner.nextLine();
+
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode ser vazia.");
+            return;
+        }
 
         Professor professor = controller.buscarPorMatricula(matricula);
 

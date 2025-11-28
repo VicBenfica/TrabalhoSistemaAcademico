@@ -40,7 +40,12 @@ public class Main {
             System.out.println("0 - Sair");
             System.out.print("Escolha: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida! Digite apenas numeros.");
+                continue;
+            }
 
             switch (opcao) {
                 case 1:
@@ -96,8 +101,9 @@ public class Main {
                 "\r\n" + //
                 "-- Cadastrando informacoes --\r\n" + //
                 "Ao escolher uma opcao como Cadastrar Aluno, Cadastrar Professor ou Cadastrar Disciplina, \r\n" + //
-                "o sistema ira pedir que voce informe algumas informacoes, complete os campos como foi solicitado \r\n" + //
-                                        " e pressione Enter apos cada informacao.\r\n"
+                "o sistema ira pedir que voce informe algumas informacoes, complete os campos como foi solicitado \r\n"
+                + //
+                " e pressione Enter apos cada informacao.\r\n"
                 + "\r\n" + //
                 "-----------------------------------------------------------------------------------------\r\n" + //
                 "\r\n" + //

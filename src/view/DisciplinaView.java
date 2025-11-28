@@ -43,7 +43,12 @@ public class DisciplinaView {
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opcao: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida! Digite apenas numeros.");
+                continue;
+            }
 
             switch (opcao) {
                 case 1:
@@ -88,52 +93,62 @@ public class DisciplinaView {
         System.out.println("\n=== Cadastro de Disciplina ===");
         System.out.println("1 - Obrigatoria");
         System.out.println("2 - Eletiva");
-        while(tipo != 1 && tipo !=2){
+        while (tipo != 1 && tipo != 2) {
             System.out.print("Tipo: ");
             tipo = Integer.parseInt(scanner.nextLine());
-            if(tipo != 1 && tipo != 2) {
+            if (tipo != 1 && tipo != 2) {
                 System.out.println("Tipo invalido!");
             }
         }
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
+        if (nome.trim().isEmpty()) {
+            System.out.println("Erro: o nome da disciplina nao pode estar vazio.");
+            return;
+        }
+
         System.out.print("Codigo: ");
         String codigo = scanner.nextLine();
 
-        System.out.print("Carga horaria: ");
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
+            return;
+        }
+
+        System.out.print("Carga horaria:");
         int cargaHoraria = Integer.parseInt(scanner.nextLine());
 
-        while(opcao.equals("1") == false && opcao.equals("2") == false){
+        while (opcao.equals("1") == false && opcao.equals("2") == false) {
             System.out.println("Deseja adicionar um professor neste momento?\n1 - Sim\n2 - Nao");
             opcao = scanner.nextLine();
-        
-            if(opcao.equals("1") == false && opcao.equals("2") == false){
+
+            if (opcao.equals("1") == false && opcao.equals("2") == false) {
                 System.out.println("Opcao invalida, tente novamente");
             }
         }
-        
-        if(opcao.equals("1")){
-            if(profController.listarProfessores().size() > 0){
-                while(responsavel == null){
+
+        if (opcao.equals("1")) {
+            if (profController.listarProfessores().size() > 0) {
+                while (responsavel == null) {
                     System.out.print("Matricula do professor responsavel: ");
                     String matriculaProfessor = scanner.nextLine();
-    
+
                     responsavel = profController.buscarPorMatricula(matriculaProfessor);
-    
-                    if(responsavel == null){
-                        System.out.println("Professor nao encontrado, verifique e tente novamente");   
+
+                    if (responsavel == null) {
+                        System.out.println("Professor nao encontrado, verifique e tente novamente");
                     }
                 }
+            } else {
+                System.out.println(
+                        "Ainda nao existem professores cadastrados no sistema, continue com o cadastro da disciolina e depois adicione o professor");
             }
-            else{
-                System.out.println("Ainda nao existem professores cadastrados no sistema, continue com o cadastro da disciolina e depois adicione o professor");
-            }
-        } 
+        }
 
         if (tipo == 1) {
-            if(cargaHoraria < 60){
-                while(cargaHoraria < 60){
+            if (cargaHoraria < 60) {
+                while (cargaHoraria < 60) {
                     System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas!");
                     System.out.println("Informe a carga horaria novamente: ");
                     cargaHoraria = Integer.parseInt(scanner.nextLine());
@@ -142,12 +157,12 @@ public class DisciplinaView {
             DisciplinaObrigatoria d = new DisciplinaObrigatoria(nome, codigo, cargaHoraria, responsavel);
 
             boolean ok = controller.cadastrarDisciplina(d);
-            if (!ok){
+            if (!ok) {
                 System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas!");
             }
 
             // atribuir professor pela regra
-            if(responsavel != null){
+            if (responsavel != null) {
                 if (!controller.definirProfessor(codigo, responsavel)) {
                     System.out.println("Erro: professor excedeu o limite de disciplinas!");
                 }
@@ -160,7 +175,7 @@ public class DisciplinaView {
 
             DisciplinaEletiva d = new DisciplinaEletiva(nome, codigo, cargaHoraria, responsavel, interesse);
             controller.cadastrarDisciplina(d);
-            if(responsavel != null){
+            if (responsavel != null) {
                 controller.definirProfessor(codigo, responsavel);
             }
         }
@@ -182,6 +197,10 @@ public class DisciplinaView {
         System.out.print("\nCodigo da disciplina para remover: ");
         String codigo = scanner.nextLine();
 
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
+            return;
+        }
         boolean ok = controller.removerDisciplina(codigo);
 
         System.out.println(ok ? "Disciplina removida!" : "Disciplina nao encontrada.");
@@ -191,7 +210,10 @@ public class DisciplinaView {
 
         System.out.print("\nCodigo da disciplina para editar: ");
         String codigo = scanner.nextLine();
-
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
+            return;
+        }
         Disciplina d = controller.buscarPorCodigo(codigo);
 
         if (d == null) {
@@ -202,12 +224,21 @@ public class DisciplinaView {
         System.out.print("Novo nome: ");
         String novoNome = scanner.nextLine();
 
+        if (novoNome.trim().isEmpty()) {
+            System.out.println("Erro: o nome da disciplina nao pode estar vazia.");
+            return;
+        }
+
         System.out.print("Nova carga horaria: ");
         int novaCarga = Integer.parseInt(scanner.nextLine());
 
         System.out.print("Nova matricula do professor responsavel: ");
         String novaMatricula = scanner.nextLine();
 
+        if (novaMatricula.trim().isEmpty()) {
+            System.out.println("Erro: a nova matricula da disciplina nao pode estar vazia.");
+            return;
+        }
         Professor novoProfessor = profController.buscarPorMatricula(novaMatricula);
 
         if (novoProfessor == null) {
@@ -225,6 +256,10 @@ public class DisciplinaView {
         System.out.print("\nCodigo da disciplina: ");
         String codigo = scanner.nextLine();
 
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
+            return;
+        }
         Disciplina d = controller.buscarPorCodigo(codigo);
 
         if (d == null) {
@@ -256,6 +291,7 @@ public class DisciplinaView {
 
                 DisciplinaEletiva eletiva = (DisciplinaEletiva) disciplina;
 
+                
                 System.out.println("Tipo: Eletiva");
                 System.out.println("Interesse: " + eletiva.getRegistroInteresse());
 
@@ -277,15 +313,26 @@ public class DisciplinaView {
     private void removerProfessor() {
         System.out.print("Digite a matricula do professor que deseja remover da disciplina: ");
         String matricula = scanner.nextLine();
+        
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode estar vazia.");
+            return;
+        }
+
         System.out.print("Digite o codigo da disciplina: ");
         String codigo = scanner.nextLine();
+
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazia.");
+            return;
+        }
 
         for (Disciplina disciplinaTemp : controller.listarDisciplinas()) {
             if (disciplinaTemp.getCodigo().equals(codigo) &&
                     disciplinaTemp.getProfessorResponsavel() != null &&
                     disciplinaTemp.getProfessorResponsavel().getMatricula().equals(matricula)) {
 
-                disciplinaTemp.removerProfessor(); 
+                disciplinaTemp.removerProfessor();
                 System.out.println("Professor removido da disciplina!");
                 return;
             }
@@ -301,8 +348,18 @@ public class DisciplinaView {
         System.out.print("Digite a matricula do professor: ");
         String matricula = scanner.nextLine();
 
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do professor nao pode estar vazio.");
+            return;
+        }
+
         System.out.print("Digite o codigo da disciplina: ");
         String codigo = scanner.nextLine();
+
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
+            return;
+        }
 
         Professor prof = profController.buscarPorMatricula(matricula);
         Disciplina d = controller.buscarPorCodigo(codigo);

@@ -90,7 +90,7 @@ public class ProjetoView {
             System.out.println("Erro: o nome do projeto não pode ser vazio.");
             return;
         }
-        //Impede nomes duplicados
+        // Impede nomes duplicados
         for (Projeto proj : vitalicio.getProjetos()) {
             if (proj.getNome().equalsIgnoreCase(nome)) {
                 System.out.println("Erro: esse professor já possui um projeto com esse nome.");

@@ -31,7 +31,12 @@ public class AlunoView {
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opcao: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            try {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opcao invalida! Digite apenas numeros.");
+                continue;
+            }
 
             switch (opcao) {
                 case 1:
@@ -63,8 +68,18 @@ public class AlunoView {
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
+        if (nome.trim().isEmpty()) {
+            System.out.println("Erro: o nome do aluno nao pode ser vazio.");
+            return;
+        }
+
         System.out.print("Matricula: ");
         String matricula = scanner.nextLine();
+
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do aluno nao pode ser vazia.");
+            return;
+        }
 
         Aluno aluno = new Aluno(nome, matricula);
 
@@ -90,6 +105,11 @@ public class AlunoView {
         System.out.print("Codigo da disciplina: ");
         String codigo = scanner.nextLine();
 
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode ser vazio.");
+            return;
+        }
+
         Disciplina disciplina = disciplinaController.buscarPorCodigo(codigo);
 
         if (disciplina == null) {
@@ -100,6 +120,11 @@ public class AlunoView {
         System.out.print("Matricula do aluno: ");
         String matricula = scanner.nextLine();
 
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do aluno  nao pode estar vazia.");
+            return;
+        }
+
         Aluno aluno = controller.buscarPorMatricula(matricula);
 
         if (aluno == null) {
@@ -107,6 +132,10 @@ public class AlunoView {
             return;
         }
 
+        if (disciplina.getAlunosMatriculados().contains(aluno)) {
+            System.out.println("Erro: o aluno ja esta matriculado nesta disciplina!");
+            return;
+        }
         boolean ok = controller.matricularAluno(codigo, aluno);
 
         System.out.println(ok ? "Aluno matriculado!" : "Erro ao matricular.");
@@ -118,6 +147,11 @@ public class AlunoView {
         System.out.print("Codigo da disciplina: ");
         String codigo = scanner.nextLine();
 
+        if (codigo.trim().isEmpty()) {
+            System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
+            return;
+        }
+
         Disciplina disciplina = disciplinaController.buscarPorCodigo(codigo);
 
         if (disciplina == null) {
@@ -128,10 +162,20 @@ public class AlunoView {
         System.out.print("Matricula do aluno: ");
         String matricula = scanner.nextLine();
 
+        if (matricula.trim().isEmpty()) {
+            System.out.println("Erro: a matricula do aluno nao pode estar vazia.");
+            return;
+        }
+
         Aluno aluno = controller.buscarPorMatricula(matricula);
 
         if (aluno == null) {
             System.out.println("Aluno nao encontrado!");
+            return;
+        }
+
+        if (!disciplina.getAlunosMatriculados().contains(aluno)) {
+            System.out.println("Erro: o aluno NAO esta matriculado nesta disciplina!");
             return;
         }
 
