@@ -82,18 +82,19 @@ public class DisciplinaView {
     }
 
     private void cadastrarDisciplina() {
-
+        String opcao = "3";
+        Professor responsavel = null;
+        int tipo = 0;
         System.out.println("\n=== Cadastro de Disciplina ===");
         System.out.println("1 - Obrigatoria");
         System.out.println("2 - Eletiva");
-        System.out.print("Tipo: ");
-        int tipo = Integer.parseInt(scanner.nextLine());
-
-        if (tipo != 1 && tipo != 2) {
-            System.out.println("Tipo invalido!");
-            return;
+        while(tipo != 1 && tipo !=2){
+            System.out.print("Tipo: ");
+            tipo = Integer.parseInt(scanner.nextLine());
+            if(tipo != 1 && tipo != 2) {
+                System.out.println("Tipo invalido!");
+            }
         }
-
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
@@ -103,28 +104,53 @@ public class DisciplinaView {
         System.out.print("Carga horaria: ");
         int cargaHoraria = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Matricula do professor responsavel: ");
-        String matriculaProfessor = scanner.nextLine();
-
-        Professor responsavel = profController.buscarPorMatricula(matriculaProfessor);
-
-        if (responsavel == null) {
-            System.out.println("Professor nao encontrado!");
-            return;
+        while(opcao.equals("1") == false && opcao.equals("2") == false){
+            System.out.println("Deseja adicionar um professor neste momento?\n1 - Sim\n2 - Nao");
+            opcao = scanner.nextLine();
+        
+            if(opcao.equals("1") == false && opcao.equals("2") == false){
+                System.out.println("Opcao invalida, tente novamente");
+            }
         }
+        
+        if(opcao.equals("1")){
+            if(profController.listarProfessores().size() > 0){
+                while(responsavel == null){
+                    System.out.print("Matricula do professor responsavel: ");
+                    String matriculaProfessor = scanner.nextLine();
+    
+                    responsavel = profController.buscarPorMatricula(matriculaProfessor);
+    
+                    if(responsavel == null){
+                        System.out.println("Professor nao encontrado, verifique e tente novamente");   
+                    }
+                }
+            }
+            else{
+                System.out.println("Ainda nao existem professores cadastrados no sistema, continue com o cadastro da disciolina e depois adicione o professor");
+            }
+        } 
 
         if (tipo == 1) {
+            if(cargaHoraria < 60){
+                while(cargaHoraria < 60){
+                    System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas!");
+                    System.out.println("Informe a carga horaria novamente: ");
+                    cargaHoraria = Integer.parseInt(scanner.nextLine());
+                }
+            }
             DisciplinaObrigatoria d = new DisciplinaObrigatoria(nome, codigo, cargaHoraria, responsavel);
 
             boolean ok = controller.cadastrarDisciplina(d);
-            if (!ok) {
+            if (!ok){
                 System.out.println("Erro: disciplinas obrigatorias devem ter pelo menos 60 horas!");
-                return;
             }
 
             // atribuir professor pela regra
-            if (!controller.definirProfessor(codigo, responsavel)) {
-                System.out.println("Erro: professor excedeu o limite de disciplinas!");
+            if(responsavel != null){
+                if (!controller.definirProfessor(codigo, responsavel)) {
+                    System.out.println("Erro: professor excedeu o limite de disciplinas!");
+                }
             }
 
         } else {
@@ -134,8 +160,9 @@ public class DisciplinaView {
 
             DisciplinaEletiva d = new DisciplinaEletiva(nome, codigo, cargaHoraria, responsavel, interesse);
             controller.cadastrarDisciplina(d);
-
-            controller.definirProfessor(codigo, responsavel);
+            if(responsavel != null){
+                controller.definirProfessor(codigo, responsavel);
+            }
         }
 
         System.out.println("Disciplina cadastrada!");
