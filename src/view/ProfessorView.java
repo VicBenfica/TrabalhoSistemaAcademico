@@ -219,7 +219,6 @@ public class ProfessorView {
     }
 
     // EDITAR PROFESSOR
-    // EDITAR PROFESSOR
     private void editarProfessor() {
 
         System.out.print("\nDigite a matricula: ");

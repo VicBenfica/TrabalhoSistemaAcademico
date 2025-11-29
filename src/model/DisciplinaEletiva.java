@@ -8,7 +8,6 @@ public class DisciplinaEletiva extends Disciplina {
             Professor professorResponsavel,
             String registroInteresse) {
 
-        // Chamada ao construtor da classe mae
         super(nome, codigo, cargaHoraria, professorResponsavel);
 
         this.registroInteresse = registroInteresse;

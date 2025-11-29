@@ -1,12 +1,10 @@
 package src.controller;
 
-
 import java.util.List;
 import src.model.Professor;
 import src.model.ProfessorSubstituto;
 import src.model.ProfessorVitalicio;
 import src.repository.ProfessorRepository;
-
 
 // aplicar regras de negocio
 // validar acoes
@@ -39,16 +37,15 @@ public class ProfessorController {
 
     // 4) EDITAR PROFESSOR
     public boolean editarProfessor(
-        String matricula,
-        String novoNome,
-        String novaTitulacao,
-        Double novoSalarioBase,
-        Integer novasHorasAula
-    ) {
+            String matricula,
+            String novoNome,
+            String novaTitulacao,
+            Double novoSalarioBase,
+            Integer novasHorasAula) {
         Professor p = professorRepository.findByMatricula(matricula);
 
         if (p == null) {
-            return false; // NAO encontrado
+            return false;
         }
 
         p.setNome(novoNome);

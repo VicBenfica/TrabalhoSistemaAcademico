@@ -34,23 +34,23 @@ public class AlunoController {
 
     // MATRICULAR ALUNO EM DISCIPLINA
     public boolean matricularAluno(String codigoDisciplina, Aluno aluno) {
-    Disciplina d = disciplinaRepository.findByCodigo(codigoDisciplina);
+        Disciplina d = disciplinaRepository.findByCodigo(codigoDisciplina);
 
-    if (d == null || aluno == null)
-        return false;
+        if (d == null || aluno == null)
+            return false;
 
-    d.adicionarAluno(aluno); // Model altera a lista
-    return true;
-}
+        d.adicionarAluno(aluno); 
+        return true;
+    }
 
     // DESMATRICULAR ALUNO DE DISCIPLINA
     public boolean desmatricularAluno(String codigoDisciplina, Aluno aluno) {
-    Disciplina d = disciplinaRepository.findByCodigo(codigoDisciplina);
+        Disciplina d = disciplinaRepository.findByCodigo(codigoDisciplina);
 
-    if (d == null || aluno == null)
-        return false;
+        if (d == null || aluno == null)
+            return false;
 
-    d.removerAluno(aluno);
-    return true;
-}
+        d.removerAluno(aluno);
+        return true;
+    }
 }

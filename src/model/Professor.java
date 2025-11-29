@@ -69,8 +69,4 @@ public abstract class Professor {
         return disciplinas;
     }
 
-
-
-  
-
 }

@@ -16,7 +16,7 @@ public abstract class Disciplina {
         this.codigo = codigo;
         this.cargaHoraria = cargaHoraria;
         this.alunosMatriculados = new ArrayList<>();
-        setProfessorResponsavel(professorResponsavel); // importante: ja cria relacao bidirecional
+        setProfessorResponsavel(professorResponsavel);
     }
 
     // GETTERS
@@ -55,7 +55,6 @@ public abstract class Disciplina {
 
     public void setProfessorResponsavel(Professor novoProfessor) {
 
-        // Se ja tinha professor antes, remover da lista dele
         if (this.professorResponsavel != null) {
             this.professorResponsavel.removerDisciplina(this);
         }

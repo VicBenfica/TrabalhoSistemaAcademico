@@ -21,7 +21,8 @@ public class DisciplinaView {
     private AlunoController alunoController;
     private ProfessorController profController;
 
-    public DisciplinaView(DisciplinaController controller, AlunoController alunoController, ProfessorController profController) {
+    public DisciplinaView(DisciplinaController controller, AlunoController alunoController,
+            ProfessorController profController) {
         this.controller = controller;
         this.alunoController = alunoController;
         this.profController = profController;
@@ -88,7 +89,7 @@ public class DisciplinaView {
 
     private void cadastrarDisciplina() {
         System.out.println("\n=== Cadastro de Disciplina ===");
-    
+
         int tipo = 0;
         while (tipo != 1 && tipo != 2) {
             System.out.println("1 - Obrigatoria");
@@ -113,7 +114,7 @@ public class DisciplinaView {
             System.out.println("Erro: o codigo da disciplina nao pode estar vazio.");
             return;
         }
-    
+
         System.out.println("Carga horaria: ");
         int cargaHoraria = Integer.parseInt(scanner.nextLine());
         if (tipo == 1) {
@@ -126,7 +127,7 @@ public class DisciplinaView {
 
         Professor responsavel = null;
         String opcao = "";
-    
+
         System.out.println("Deseja adicionar um professor agora?\n1 - Sim\n2 - Nao");
         while (!opcao.equals("1") && !opcao.equals("2")) {
             opcao = scanner.nextLine();
@@ -134,20 +135,20 @@ public class DisciplinaView {
                 System.out.println("Opcao invalida, tente novamente");
             }
         }
-    
+
         if (opcao.equals("1")) {
 
             if (profController.listarProfessores().size() > 0) {
-    
+
                 boolean professorValido = false;
-    
+
                 while (!professorValido) {
-    
+
                     System.out.println("Matricula do professor responsavel: ");
                     String mat = scanner.nextLine();
-    
+
                     Professor temp = profController.buscarPorMatricula(mat);
-    
+
                     if (temp == null) {
                         System.out.println("Professor nao encontrado.");
                         continue;
@@ -163,26 +164,27 @@ public class DisciplinaView {
                         }
 
                         if (existeVitalicio && !(temp instanceof ProfessorVitalicio)) {
-                            System.out.println("Somente professores vitalicios podem assumir disciplinas obrigatorias.");
+                            System.out
+                                    .println("Somente professores vitalicios podem assumir disciplinas obrigatorias.");
                             continue;
                         }
                     }
-    
+
                     responsavel = temp;
                     professorValido = true;
                 }
-    
+
             } else {
                 opcao = "";
                 System.out.println("Nao existem professores cadastrados. Continuar sem professor?\n1 - Sim\n2 - Nao");
-    
+
                 while (!opcao.equals("1") && !opcao.equals("2")) {
                     opcao = scanner.nextLine();
                     if (!opcao.equals("1") && !opcao.equals("2")) {
                         System.out.println("Opcao invalida.");
                     }
                 }
-    
+
                 if (opcao.equals("2")) {
                     System.out.println("Cancelando cadastro.");
                     return;
@@ -192,7 +194,7 @@ public class DisciplinaView {
 
         if (tipo == 1) {
             DisciplinaObrigatoria d = new DisciplinaObrigatoria(nome, codigo, cargaHoraria, responsavel);
-    
+
             if (!controller.cadastrarDisciplina(d)) {
                 System.out.println("Erro ao cadastrar disciplina obrigatoria.");
                 return;
@@ -200,52 +202,52 @@ public class DisciplinaView {
 
             if (responsavel != null) {
                 boolean atribuido = controller.definirProfessor(codigo, responsavel);
-    
+
                 while (!atribuido) {
                     System.out.println("Erro: professor excedeu o limite de disciplinas.");
                     System.out.println("Informe a matricula de outro professor ou digite 0 para pular:");
-    
+
                     String mat = scanner.nextLine();
-                    if (mat.equals("0")) break;
-    
+                    if (mat.equals("0"))
+                        break;
+
                     Professor novo = profController.buscarPorMatricula(mat);
-    
+
                     if (novo == null) {
                         System.out.println("Professor nao encontrado.");
                         continue;
                     }
-    
+
                     if (!(novo instanceof ProfessorVitalicio)) {
                         System.out.println("Somente vitalicios podem assumir obrigatorias.");
                         continue;
                     }
-    
+
                     atribuido = controller.definirProfessor(codigo, novo);
-    
+
                     if (atribuido) {
                         System.out.println("Professor atribuido!");
                     }
                 }
             }
-    
+
             System.out.println("Disciplina obrigatoria cadastrada!");
-    
+
         } else {
             System.out.println("Registrar interesse? (1 - Sim / 2 - Nao)");
             int op = Integer.parseInt(scanner.nextLine());
             String interesse = (op == 1 ? "Interesse registrado" : "Nenhum interesse");
-    
+
             DisciplinaEletiva d = new DisciplinaEletiva(nome, codigo, cargaHoraria, responsavel, interesse);
             controller.cadastrarDisciplina(d);
-    
+
             if (responsavel != null) {
                 controller.definirProfessor(codigo, responsavel);
             }
-    
+
             System.out.println("Disciplina eletiva cadastrada!");
         }
     }
-    
 
     private void listarDisciplinas() {
         List<Disciplina> lista = controller.listarDisciplinas();
@@ -257,7 +259,7 @@ public class DisciplinaView {
         }
     }
 
-        private void removerDisciplina() {
+    private void removerDisciplina() {
         boolean ok = false;
         boolean certo = false;
         String opcao = "0";
@@ -272,9 +274,9 @@ public class DisciplinaView {
 
         for (Disciplina disciplinaTemp : controller.listarDisciplinas()) {
 
-            if (!disciplinaTemp.getCodigo().equals(codigo)){
+            if (!disciplinaTemp.getCodigo().equals(codigo)) {
                 continue;
-            } 
+            }
 
             while (!certo) {
 
@@ -291,8 +293,7 @@ public class DisciplinaView {
 
                     if (opcao.equals("1")) {
                         disciplinaTemp.removerProfessor();
-                    } 
-                    else {
+                    } else {
                         System.out.println("Operacao cancelada.");
                         return;
                     }
@@ -314,8 +315,7 @@ public class DisciplinaView {
                         for (Aluno a : copia) {
                             disciplinaTemp.removerAluno(a);
                         }
-                    } 
-                    else {
+                    } else {
                         System.out.println("Operacao cancelada.");
                         return;
                     }
@@ -356,7 +356,7 @@ public class DisciplinaView {
         System.out.print("Nova carga horaria: ");
         int novaCarga = Integer.parseInt(scanner.nextLine());
 
-        if (d instanceof DisciplinaObrigatoria){
+        if (d instanceof DisciplinaObrigatoria) {
             if (novaCarga < 60) {
                 System.out.println("Erro: disciplinas obrigatorias devem ter no minimo 60 horas.");
                 return;
@@ -407,7 +407,7 @@ public class DisciplinaView {
     private void relatorioDisciplina() {
 
         int totalAlunos = alunoController.listarAlunos().size();
-
+        System.out.println("------RELATORIO DISCIPLINAS------");
         for (Disciplina disciplina : controller.listarDisciplinas()) {
 
             System.out.println("\n------------------------------");

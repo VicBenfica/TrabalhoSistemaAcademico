@@ -104,7 +104,7 @@ public class ProjetoView {
         // Adiciona no professor
         vitalicio.adicionarProjeto(projeto);
 
-        // Salva no repositório
+        // Salva no repositorio
         projetoController.cadastrarProjeto(projeto);
 
         System.out.println("Projeto cadastrado com sucesso!");
