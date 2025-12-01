@@ -41,6 +41,7 @@ public class DisciplinaView {
             System.out.println("6 - Gerar Relatorio Disciplinas");
             System.out.println("7 - Remover Professor da Disciplina");
             System.out.println("8 - Atribuir Professor a Disciplina");
+            System.out.println("9 - Registrar seu interesse em uma Disciplina");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opcao: ");
 
@@ -78,6 +79,7 @@ public class DisciplinaView {
                     break;
                 case 9:
                     registrarInteresse();
+                    break;
                 case 0:
                     System.out.println("Encerrando menu de disciplinas...");
                     break;
@@ -560,7 +562,12 @@ public class DisciplinaView {
             }
             if (valido == false) {
                 System.out.println(
-                        "A matricula informada nao condiz com nenhuma cadastrada no sistema, verifique e tente novamente");
+                        "A matricula informada nao condiz com nenhuma cadastrada no sistema, verifique e tente novamente ou cancele a operacao");
+                System.out.println("Deseja cancelar a operacao?\n1 - Sim\n2 - Nao");
+                String opcaoTemp = scanner.nextLine();
+                if(opcaoTemp.equals("1")){
+                    return;
+                }
             }
         }
         System.out.println("Informe a disciplina que gostaria de registrar interesse: ");
@@ -586,6 +593,7 @@ public class DisciplinaView {
                             alunoTemp.adicionarInteresse(((DisciplinaEletiva) disciplinaTemp));
                         }
                     }
+                    System.out.println("Interesse Adicionado");
                 }
             }
         }

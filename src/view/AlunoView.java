@@ -80,6 +80,12 @@ public class AlunoView {
             System.out.println("Erro: a matricula do aluno nao pode ser vazia.");
             return;
         }
+        if(controller.listarAlunos().size() > 0){
+            if(matricula.equals(controller.buscarPorMatricula(matricula).getMatricula())){
+                System.out.println("Essa matricula já está sendo usada");
+                return;
+            }
+        }
 
         Aluno aluno = new Aluno(nome, matricula);
 
